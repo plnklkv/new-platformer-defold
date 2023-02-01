@@ -1,0 +1,45 @@
+image: "/resources/enemy/Attack (34x28).png"
+tile_width: 34
+tile_height: 28
+tile_margin: 0
+tile_spacing: 0
+collision: "/resources/enemy/Attack (34x28).png"
+material_tag: "tile"
+convex_hulls {
+  index: 0
+  count: 10
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 10
+  count: 12
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 22
+  count: 13
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 35
+  count: 14
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 49
+  count: 11
+  collision_group: "enemy"
+}
+collision_groups: "enemy"
+animations {
+  id: "run"
+  start_tile: 1
+  end_tile: 5
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 12
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+extrude_borders: 2
+inner_padding: 0
+sprite_trim_mode: SPRITE_TRIM_MODE_OFF

@@ -1,0 +1,45 @@
+image: "/resources/player/raptor-run.png"
+tile_width: 130
+tile_height: 64
+tile_margin: 0
+tile_spacing: 0
+collision: "/resources/player/raptor-run.png"
+material_tag: "tile"
+convex_hulls {
+  index: 0
+  count: 9
+  collision_group: "player"
+}
+convex_hulls {
+  index: 9
+  count: 9
+  collision_group: "player"
+}
+convex_hulls {
+  index: 18
+  count: 10
+  collision_group: "player"
+}
+convex_hulls {
+  index: 28
+  count: 9
+  collision_group: "player"
+}
+convex_hulls {
+  index: 37
+  count: 9
+  collision_group: "player"
+}
+collision_groups: "player"
+animations {
+  id: "run"
+  start_tile: 1
+  end_tile: 5
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 12
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+extrude_borders: 2
+inner_padding: 0
+sprite_trim_mode: SPRITE_TRIM_MODE_OFF

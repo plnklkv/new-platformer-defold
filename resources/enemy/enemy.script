@@ -1,0 +1,48 @@
+--local platypus = require "platypus.platypus"
+local speed = 50
+
+local obstacle_for_enemy_CONTACT = false
+local GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
+local pos = vmath.vector3(552, 222, 0)
+
+function init(self)
+	--[[self.platypus = platypus.create({
+		collisions = {
+			separation = platypus.SEPARATION_RAYS,
+			groups = {
+				[hash("platform")] = platypus.DIR_ALL,
+				[hash("obstacle_for_enemy")] = platypus.DIR_ALL,	
+			},
+			left = 7, right = 7, top = 7, bottom = 7, offset = vmath.vector3(0, 0, 0)
+		},
+		gravity = -800,
+		max_velocity = 300,
+		allow_double_jump = true,
+		
+		debug = true, 
+	})]]--
+end
+
+function update(self, dt)
+	--self.platypus.update(dt)
+	pos = go.get_position()
+	
+	print(obstacle_for_enemy_CONTACT)
+	--типа движение врага
+	pos.x = pos.x + speed * dt
+	pos.y = 222
+	go.set_position(pos)
+end
+
+function on_message(self, message_id, message, sender)
+	--self.platypus.on_message(message_id, message)
+		
+	if message.group == GROUP_obstacle_for_enemy then
+		if obstacle_for_enemy_CONTACT then
+			obstacle_for_enemy_CONTACT = false
+			speed = -speed
+		else
+			obstacle_for_enemy_CONTACT = true
+		end
+	end
+end

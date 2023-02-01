@@ -1,0 +1,62 @@
+name: "main"
+instances {
+  id: "platform"
+  prototype: "/resources/platform/platform.go"
+  position {
+    x: 504.0
+    y: 187.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "player"
+  prototype: "/resources/player/player.go"
+  position {
+    x: 563.0
+    y: 377.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+    z: 0.5
+  }
+}
+instances {
+  id: "enemy"
+  prototype: "/resources/enemy/enemy.go"
+  position {
+    x: 552.0
+    y: 222.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+scale_along_z: 0
