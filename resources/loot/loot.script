@@ -1,0 +1,27 @@
+local pos = vmath.vector3()
+local create_loot = hash("create_loot")
+local pos_loot = vmath.vector3()
+
+local GROUP_player = hash("player")
+
+local player = nil
+
+local contact_point_response = hash("contact_point_response")
+local trigger = hash("trigger_response")
+
+function init(self)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == create_loot then
+		print("create loot!")
+		factory.create("enemy#factory_health", message.pos_loot)
+	end
+
+	--контакт с игроком
+	if message_id == trigger and message.other_group == GROUP_player then
+		go.delete()
+		msg.post("/player#player", "add_player_health", {player_health = 500})
+	end
+end

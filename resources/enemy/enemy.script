@@ -12,6 +12,7 @@ local GROUP_player = hash("player")
 local player_CONTACT = false
 
 function init(self)
+	
 end
 
 --уменьшение здоровья игрока

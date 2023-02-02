@@ -1,0 +1,4 @@
+tile_set: "/resources/loot/loot.atlas"
+default_animation: "health"
+material: "/builtins/materials/sprite.material"
+blend_mode: BLEND_MODE_ALPHA
