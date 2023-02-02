@@ -44,6 +44,7 @@ embedded_components {
   "group: \"enemy\"\n"
   "mask: \"obstacle_for_enemy\"\n"
   "mask: \"platform\"\n"
+  "mask: \"player\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

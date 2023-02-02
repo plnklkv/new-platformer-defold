@@ -1,36 +1,33 @@
 --local platypus = require "platypus.platypus"
-local speed = 50
-
 local obstacle_for_enemy_CONTACT = false
 local GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
+
 local pos = vmath.vector3(552, 222, 0)
+local speed = 50
+
+local enemy_health = 50
+local player_health = 100
+
+local GROUP_player = hash("player")
+local player_CONTACT = false
 
 function init(self)
-	--[[self.platypus = platypus.create({
-		collisions = {
-			separation = platypus.SEPARATION_RAYS,
-			groups = {
-				[hash("platform")] = platypus.DIR_ALL,
-				[hash("obstacle_for_enemy")] = platypus.DIR_ALL,	
-			},
-			left = 7, right = 7, top = 7, bottom = 7, offset = vmath.vector3(0, 0, 0)
-		},
-		gravity = -800,
-		max_velocity = 300,
-		allow_double_jump = true,
-		
-		debug = true, 
-	})]]--
+end
+
+--уменьшение здоровья игрока
+local function decrease_player_health(self)
+	player_health = player_health - 10
+	--print(player_health)
+
+	--game over lol
 end
 
 function update(self, dt)
 	--self.platypus.update(dt)
 	pos = go.get_position()
 	
-	print(obstacle_for_enemy_CONTACT)
 	--типа движение врага
 	pos.x = pos.x + speed * dt
-	pos.y = 222
 	go.set_position(pos)
 end
 
@@ -44,5 +41,12 @@ function on_message(self, message_id, message, sender)
 		else
 			obstacle_for_enemy_CONTACT = true
 		end
+	end
+
+	if message.group == GROUP_player then
+		player_CONTACT = true
+		decrease_player_health(self)
+	else
+		player_CONTACT = false
 	end
 end

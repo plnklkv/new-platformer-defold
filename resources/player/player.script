@@ -1,4 +1,9 @@
 local platypus = require "platypus.platypus"
+local player_health = 100
+local enemy_health = 50
+
+local GROUP_enemy = hash("enemy")
+local enemy_CONTACT = false
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -40,6 +45,17 @@ local function climb_down(self)
 	self.platypus.down(80)
 end
 
+--уменьшение здоровья врага
+local function decrease_enemy_health(self)
+	enemy_health = enemy_health - 10
+	print(enemy_health)
+
+	if enemy_health == 0 then
+		--СМЕРТЬ
+		go.delete(go.get_id("enemy"));
+	end
+end
+
 function update(self, dt)
 	self.platypus.update(dt)
 
@@ -55,30 +71,19 @@ function update(self, dt)
 			climb_down(self)
 		end
 	end
+
+	enemy_CONTACT = false
 end
 
 function on_message(self, message_id, message, sender)
 	self.platypus.on_message(message_id, message)
 	if message_id == hash("contact_point_response") then
 		--
-	end
-	if message_id == platypus.FALLING then
-		print("I'm falling")
-	elseif message_id == platypus.GROUND_CONTACT then
-		print("Phew! Solid ground")
-	elseif message_id == platypus.WALL_CONTACT then
-		print("Ouch!")
-	elseif message_id == platypus.WALL_JUMP then
-		print("Doing a wall jump!")
-	elseif message_id == platypus.DOUBLE_JUMP then
-		print("Doing a double jump!")
-	elseif message_id == platypus.JUMP then
-		print("Jumping!")
-	elseif message_id == platypus.WALL_SLIDE then
-		print("Sliding down a wall!")
+		
 	end
 
 	if message_id == hash("trigger_response") then
+		--контакт с лестницей
 		if message.other_group == hash("ladder") then
 			if message.enter then
 				self.ladder = true
@@ -88,6 +93,14 @@ function on_message(self, message_id, message, sender)
 				--self.climbing = false
 			end
 		end
+		
+	end
+
+	--контакт с врагом
+	if message.group == GROUP_enemy then
+		enemy_CONTACT = true
+	elseif message.group ~= GROUP_enemy then
+		enemy_CONTACT = false
 	end
 end
 
@@ -112,5 +125,10 @@ function on_input(self, action_id, action)
 		climb_up(self)
 	elseif action_id == hash("down") and self.ladder then
 		climb_down(self)
+	end
+
+	--атака
+	if action_id == hash("attack") and enemy_CONTACT and enemy_health > 0 then
+		decrease_enemy_health(self)
 	end
 end
