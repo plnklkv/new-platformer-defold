@@ -6,16 +6,10 @@ local GROUP_player = hash("player")
 
 local player = nil
 
-local contact_point_response = hash("contact_point_response")
 local trigger = hash("trigger_response")
-
-function init(self)
-	
-end
 
 function on_message(self, message_id, message, sender)
 	if message_id == create_loot then
-		print("create loot!")
 		factory.create("enemy#factory_health", message.pos_loot)
 	end
 

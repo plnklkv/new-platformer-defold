@@ -1,0 +1,10 @@
+tile_set: "/resources/lifebar/lifebar.atlas"
+default_animation: "lifebar_backround"
+material: "/builtins/materials/sprite.material"
+blend_mode: BLEND_MODE_ALPHA
+slice9 {
+  x: 3.0
+  y: 2.0
+  z: 0.0
+  w: 2.0
+}

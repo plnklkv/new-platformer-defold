@@ -1,6 +1,6 @@
 local platypus = require "platypus.platypus"
 local player_health = 100
-local enemy_health = 50
+local enemy_health = 100
 
 local GROUP_enemy = hash("enemy")
 local enemy_CONTACT = false
@@ -65,12 +65,12 @@ local function decrease_enemy_health(self)
 		--СМЕРТЬ
 		go.delete(go.get_id("enemy"));
 	end
+
+
 end
 
 function update(self, dt)
 	self.platypus.update(dt)
-
-	print("HEALTH PLAYER = ", player_health)
 	
 	--стоит ли игрок на земле
 	local ground_contact = self.platypus.has_ground_contact()
@@ -85,7 +85,18 @@ function update(self, dt)
 		end
 	end
 
+	--шкала здоровья
+	if enemy_health > 0 then
+		msg.post("lifebar_progress#lifebar", "set_health", {health = enemy_health, max_health = 100, player = false})
+	end
 	enemy_CONTACT = false
+
+	--тоже уберу потом (дублирую пока)
+	if player_health > 100 then
+		player_health = 100
+	end
+	
+	print("HEALTH PLAYER = ", player_health)
 end
 
 function on_message(self, message_id, message, sender)
@@ -106,7 +117,6 @@ function on_message(self, message_id, message, sender)
 				--self.climbing = false
 			end
 		end
-		
 	end
 
 	--контакт с врагом
@@ -121,6 +131,14 @@ function on_message(self, message_id, message, sender)
 		print("OK !! add_player_health", player_health)
 
 		player_health = player_health + message.player_health
+
+		--тоже уберу потом (дублирую пока)
+		if player_health > 100 then
+			player_health = 100
+		end
+
+		--дублирую пока чтоб работало
+		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
 	end
 end
 

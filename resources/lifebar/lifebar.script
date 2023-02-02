@@ -1,0 +1,32 @@
+local set_health = hash("set_health")
+
+function on_message(self, message_id, message, sender)
+
+	if message_id == set_health then
+		max_health = message.max_health
+		health = message.health
+
+		print("health => ", health, " (", max_health, ")")
+		if message.player then
+			local scale = go.get_scale("lifebar_background1")
+			--если достигнут макс уровень
+			if health > max_health then
+				print("max h pl")
+				scale.x = max_health
+			else
+				scale.x = (health/max_health) + 0.001
+			end
+			go.set_scale(scale, "lifebar_progress1")
+		else
+			local scale = go.get_scale("lifebar_background")
+			--если достигнут макс уровень
+			if health > max_health then
+				scale.x = max_health
+				print("max h en")	
+			else
+				scale.x = (health/max_health) + 0.001
+			end
+			go.set_scale(scale, "lifebar_progress")
+		end
+	end
+end

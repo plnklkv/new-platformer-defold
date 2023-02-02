@@ -20,6 +20,7 @@ local function decrease_player_health(self)
 	player_health = player_health - 10
 	--print(player_health)
 
+	
 	--game over lol
 end
 
@@ -30,11 +31,18 @@ function update(self, dt)
 	--типа движение врага
 	pos.x = pos.x + speed * dt
 	go.set_position(pos)
+
+	--шкала здоровья
+	--потом убрать проверку
+	if player_health > 0 then
+		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
+	end
 end
 
 function on_message(self, message_id, message, sender)
 	--self.platypus.on_message(message_id, message)
-		
+
+	--столкновение врага с препятсвием
 	if message.group == GROUP_obstacle_for_enemy then
 		if obstacle_for_enemy_CONTACT then
 			obstacle_for_enemy_CONTACT = false

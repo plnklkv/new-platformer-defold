@@ -22,6 +22,8 @@ instances {
 instances {
   id: "player"
   prototype: "/resources/player/player.go"
+  children: "lifebar_background1"
+  children: "lifebar_progress1"
   position {
     x: 563.0
     y: 377.0
@@ -42,6 +44,8 @@ instances {
 instances {
   id: "enemy"
   prototype: "/resources/enemy/enemy.go"
+  children: "lifebar_background"
+  children: "lifebar_progress"
   position {
     x: 552.0
     y: 222.0
@@ -80,3 +84,185 @@ instances {
   }
 }
 scale_along_z: 0
+embedded_instances {
+  id: "lifebar_background"
+  data: "components {\n"
+  "  id: \"lifebar_background\"\n"
+  "  component: \"/resources/lifebar/lifebar_background.sprite\"\n"
+  "  position {\n"
+  "    x: 25.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -25.0
+    y: 12.0
+    z: -1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "lifebar_progress"
+  data: "components {\n"
+  "  id: \"lifebar_progress\"\n"
+  "  component: \"/resources/lifebar/lifebar_progress.sprite\"\n"
+  "  position {\n"
+  "    x: 24.5\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"lifebar\"\n"
+  "  component: \"/resources/lifebar/lifebar.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -25.0
+    y: 12.5
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "lifebar_background1"
+  data: "components {\n"
+  "  id: \"lifebar_background\"\n"
+  "  component: \"/resources/lifebar/lifebar_background.sprite\"\n"
+  "  position {\n"
+  "    x: 25.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -19.0
+    y: 6.0
+    z: -1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "lifebar_progress1"
+  data: "components {\n"
+  "  id: \"lifebar\"\n"
+  "  component: \"/resources/lifebar/lifebar.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"lifebar_progress\"\n"
+  "  component: \"/resources/lifebar/lifebar_progress.sprite\"\n"
+  "  position {\n"
+  "    x: 24.5\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -19.0
+    y: 6.5
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
