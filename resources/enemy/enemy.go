@@ -45,6 +45,7 @@ embedded_components {
   "mask: \"obstacle_for_enemy\"\n"
   "mask: \"platform\"\n"
   "mask: \"player\"\n"
+  "mask: \"shot\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -86,7 +87,43 @@ embedded_components {
 embedded_components {
   id: "factory_health"
   type: "factory"
-  data: "prototype: \"/resources/loot/loot.go\"\n"
+  data: "prototype: \"/resources/loot/loot_health.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "factory_money"
+  type: "factory"
+  data: "prototype: \"/resources/loot/loot_money.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "factory_mana"
+  type: "factory"
+  data: "prototype: \"/resources/loot/loot_mana.go\"\n"
   "load_dynamically: false\n"
   ""
   position {

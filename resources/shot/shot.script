@@ -1,0 +1,51 @@
+local shot = hash("shot")
+local trigger = hash("trigger_response")
+
+local pos_shot = vmath.vector3()
+
+local GROUP_enemy = hash("enemy")
+
+local shot_bool = false
+
+function init(self)
+	pos_shot = go.get_position(go.get_id("player"))
+	
+end
+
+function update(self, dt)
+	if shot_bool then
+		--pos_shot = go.get_position()
+		
+		pos_shot.x = pos_shot.x + 10 * dt
+		--pos_shot.y = pos_shot.y
+		--print(pos_shot)
+
+		go.set_position(pos_shot)
+		
+		--go.set_position(pos_shot)
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	--pos_shot = message.pos_shot
+
+	
+	if message_id == shot then
+
+		--go.set_position(pos_shot)
+		
+		--pos_shot = message.pos_shot
+		print("fact cr pos = = ", pos_shot)
+		factory.create("player#shot", pos_shot)
+		print("create shot")
+		go.set_position(pos_shot)
+		shot_bool=true
+	end
+
+	--контакт с игроком
+	if message_id == trigger and message.other_group == GROUP_enemy then
+		print("SHOT in enemy")
+		--go.delete()
+		--msg.post("/player#player", "add_player_health", {player_health = 500})
+	end
+end

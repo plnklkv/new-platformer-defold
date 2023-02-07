@@ -1,4 +1,5 @@
 local set_health = hash("set_health")
+local set_mana = hash("set_mana")
 
 function on_message(self, message_id, message, sender)
 
@@ -6,13 +7,14 @@ function on_message(self, message_id, message, sender)
 		max_health = message.max_health
 		health = message.health
 
-		print("health => ", health, " (", max_health, ")")
 		if message.player then
 			local scale = go.get_scale("lifebar_background1")
 			--если достигнут макс уровень
 			if health > max_health then
-				print("max h pl")
 				scale.x = max_health
+				--потом убрать когда сделаю смерть игрока
+			elseif health <= 0 then
+				scale.x = 0.001
 			else
 				scale.x = (health/max_health) + 0.001
 			end
@@ -22,11 +24,27 @@ function on_message(self, message_id, message, sender)
 			--если достигнут макс уровень
 			if health > max_health then
 				scale.x = max_health
-				print("max h en")	
 			else
 				scale.x = (health/max_health) + 0.001
 			end
 			go.set_scale(scale, "lifebar_progress")
 		end
+	end
+
+	if message_id == set_mana then
+		max_mana = message.max_mana
+		mana = message.mana
+
+		local scale = go.get_scale("manabar_background1")
+		--если достигнут макс уровень
+		if mana > max_mana then
+			scale.x = max_mana
+			--потом убрать когда сделаю смерть игрока
+		elseif mana <= 0 then
+			scale.x = 0.001
+		else
+			scale.x = (mana/max_mana) + 0.001
+		end
+		go.set_scale(scale, "manabar_progress1")
 	end
 end

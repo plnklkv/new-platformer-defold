@@ -43,7 +43,7 @@ shared_state = 1
 [physics]
 gravity_y = -1000.0
 scale = 0.01
-debug = 1
+debug = 0
 
 [graphics]
 default_texture_min_filter = nearest

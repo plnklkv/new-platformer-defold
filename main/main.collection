@@ -2,6 +2,10 @@ name: "main"
 instances {
   id: "platform"
   prototype: "/resources/platform/platform.go"
+  children: "lifebar_background1"
+  children: "lifebar_progress1"
+  children: "manabar_background1"
+  children: "manabar_progress1"
   position {
     x: 504.0
     y: 187.0
@@ -17,28 +21,6 @@ instances {
     x: 1.0
     y: 1.0
     z: 1.0
-  }
-}
-instances {
-  id: "player"
-  prototype: "/resources/player/player.go"
-  children: "lifebar_background1"
-  children: "lifebar_progress1"
-  position {
-    x: 563.0
-    y: 377.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.5
-    y: 0.5
-    z: 0.5
   }
 }
 instances {
@@ -65,7 +47,7 @@ instances {
 }
 instances {
   id: "loot"
-  prototype: "/resources/loot/loot.go"
+  prototype: "/resources/loot/loot_health.go"
   position {
     x: 0.0
     y: 0.0
@@ -81,6 +63,46 @@ instances {
     x: 1.0
     y: 1.0
     z: 1.0
+  }
+}
+instances {
+  id: "shot"
+  prototype: "/resources/shot/shot.go"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+instances {
+  id: "player"
+  prototype: "/resources/player/player.go"
+  position {
+    x: 560.0
+    y: 390.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.5
+    y: 0.5
+    z: 0.5
   }
 }
 scale_along_z: 0
@@ -105,7 +127,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -25.0
+    x: -23.0
     y: 12.0
     z: -1.0
   }
@@ -159,7 +181,7 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -25.0
+    x: -23.0
     y: 12.5
     z: 0.0
   }
@@ -181,7 +203,7 @@ embedded_instances {
   "  id: \"lifebar_background\"\n"
   "  component: \"/resources/lifebar/lifebar_background.sprite\"\n"
   "  position {\n"
-  "    x: 25.0\n"
+  "    x: 55.0\n"
   "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
@@ -193,11 +215,16 @@ embedded_instances {
   "  }\n"
   "  property_decls {\n"
   "  }\n"
+  "  scale {\n"
+  "    x: 2.0\n"
+  "    y: 2.0\n"
+  "    z: 1.0\n"
+  "  }\n"
   "}\n"
   ""
   position {
-    x: -19.0
-    y: 6.0
+    x: -198.0
+    y: 236.0
     z: -1.0
   }
   rotation {
@@ -235,7 +262,113 @@ embedded_instances {
   "  id: \"lifebar_progress\"\n"
   "  component: \"/resources/lifebar/lifebar_progress.sprite\"\n"
   "  position {\n"
-  "    x: 24.5\n"
+  "    x: 48.5\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 2.0\n"
+  "    y: 2.0\n"
+  "    z: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -192.0
+    y: 235.5
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "manabar_background1"
+  data: "components {\n"
+  "  id: \"lifebar_background\"\n"
+  "  component: \"/resources/lifebar/lifebar_background.sprite\"\n"
+  "  position {\n"
+  "    x: 35.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 1.5\n"
+  "    y: 1.5\n"
+  "    z: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: -190.0
+    y: 213.0
+    z: -1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "manabar_progress1"
+  data: "components {\n"
+  "  id: \"lifebar_progress\"\n"
+  "  component: \"/resources/lifebar/lifebar_progress.sprite\"\n"
+  "  position {\n"
+  "    x: 32.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 1.5\n"
+  "    y: 1.5\n"
+  "    z: 1.0\n"
+  "  }\n"
+  "}\n"
+  "components {\n"
+  "  id: \"lifebar\"\n"
+  "  component: \"/resources/lifebar/lifebar.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
   "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
@@ -250,8 +383,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -19.0
-    y: 6.5
+    x: -187.0
+    y: 213.0
     z: 0.0
   }
   rotation {

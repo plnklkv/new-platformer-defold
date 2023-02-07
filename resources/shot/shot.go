@@ -1,6 +1,6 @@
 components {
-  id: "loot"
-  component: "/resources/loot/loot.sprite"
+  id: "shot"
+  component: "/resources/shot/shot.script"
   position {
     x: 0.0
     y: 0.0
@@ -14,8 +14,8 @@ components {
   }
 }
 components {
-  id: "loot1"
-  component: "/resources/loot/loot.script"
+  id: "shot1"
+  component: "/resources/shot/shot.sprite"
   position {
     x: 0.0
     y: 0.0
@@ -29,15 +29,15 @@ components {
   }
 }
 embedded_components {
-  id: "collision_health"
+  id: "collision_shot"
   type: "collisionobject"
-  data: "collision_shape: \"/resources/loot/loot.tilemap\"\n"
+  data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_TRIGGER\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"loot\"\n"
-  "mask: \"player\"\n"
+  "group: \"shot\"\n"
+  "mask: \"enemy\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
@@ -55,8 +55,8 @@ embedded_components {
   "    index: 0\n"
   "    count: 3\n"
   "  }\n"
-  "  data: 11.6105\n"
-  "  data: 14.3505\n"
+  "  data: 15.657\n"
+  "  data: 14.3295\n"
   "  data: 10.0\n"
   "}\n"
   "linear_damping: 0.0\n"

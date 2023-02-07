@@ -758,7 +758,7 @@ convex_hulls {
 convex_hulls {
   index: 698
   count: 6
-  collision_group: ""
+  collision_group: "spikes"
 }
 convex_hulls {
   index: 704
@@ -1048,6 +1048,7 @@ convex_hulls {
 collision_groups: "ladder"
 collision_groups: "obstacle_for_enemy"
 collision_groups: "platform"
+collision_groups: "spikes"
 animations {
   id: "anim"
   start_tile: 1

@@ -1,15 +1,33 @@
 local platypus = require "platypus.platypus"
 local player_health = 100
-local enemy_health = 100
+local player_mana = 100
+
+local player_health_shield = nil
 
 local GROUP_enemy = hash("enemy")
 local enemy_CONTACT = false
 
-local pos_enemy = vmath.vector3()
+local GROUP_spikes = hash("spikes")
+
 
 local add_player_health = hash("add_player_health")
+local add_player_money = hash("add_player_money")
+local add_player_mana = hash("add_player_mana")
+
 
 local contact_point_response = hash("contact_point_response")
+
+local money = 0
+
+local pos_shot = vmath.vector3()
+
+local attack_shield = false
+
+local input_attack = hash("attack")
+local input_shot = hash("shot")
+
+
+local msg_simple_attack = hash("simple_attack")
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -21,17 +39,18 @@ function init(self)
 			groups = {
 				[hash("platform")] = platypus.DIR_ALL,
 				[hash("obstacle_for_enemy")] = platypus.DIR_ALL,
+
 			},
 			left = 15, right = 15, top = 10, bottom = 10, offset = vmath.vector3(-5, -10, 0)
 		},
 		gravity = -800,
 		max_velocity = 300,
 		allow_double_jump = true,
-		
+
 		allow_wall_jump = true,
 		allow_wall_slide = true,
 		wall_slide_gravity = -50,
-		
+
 		debug = true, 
 	})
 end
@@ -51,30 +70,25 @@ local function climb_down(self)
 	self.platypus.down(80)
 end
 
---уменьшение здоровья врага, смерть и лут
+--атака на врага
 local function decrease_enemy_health(self)
-	enemy_health = enemy_health - 10
-	print(enemy_health)
+	msg.post("/enemy#enemy", "simple_attack")
+end
 
-	if enemy_health == 0 then
-		--получение позиции врага
-		pos_enemy = go.get_position(go.get_id("enemy"))
-		--выпадает лут
-		msg.post("/loot#loot1", "create_loot", {pos_loot = pos_enemy})
+--уменьшение здоровья игрока
+local function decrease_player_health(self)
+	--сделать потом чтоб останавливаться
+	player_health = player_health - 10
 
-		--СМЕРТЬ
-		go.delete(go.get_id("enemy"));
-	end
-
-
+	--game over lol
 end
 
 function update(self, dt)
 	self.platypus.update(dt)
-	
+
 	--стоит ли игрок на земле
 	local ground_contact = self.platypus.has_ground_contact()
-	
+
 	if self.input_state[hash("up")] then
 		if self.ladder then
 			climb_up(self)
@@ -86,24 +100,35 @@ function update(self, dt)
 	end
 
 	--шкала здоровья
-	if enemy_health > 0 then
-		msg.post("lifebar_progress#lifebar", "set_health", {health = enemy_health, max_health = 100, player = false})
-	end
+
+	--if player_mana >= 0 then
+	msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+	--end
+
+
 	enemy_CONTACT = false
 
 	--тоже уберу потом (дублирую пока)
 	if player_health > 100 then
 		player_health = 100
 	end
-	
-	print("HEALTH PLAYER = ", player_health)
+
+	if player_health <= 0 then
+		player_health = 0
+	end
+
+	msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
+
+	--print("HEALTH PLAYER = ", player_health)
+
+	--pos_shot = go.get_position()
 end
 
 function on_message(self, message_id, message, sender)
 	self.platypus.on_message(message_id, message)
 	if message_id == contact_point_response then
 		--
-		
+
 	end
 
 	if message_id == hash("trigger_response") then
@@ -117,20 +142,26 @@ function on_message(self, message_id, message, sender)
 				--self.climbing = false
 			end
 		end
+
+		--контакт с врагом
+		if message.group == GROUP_enemy then
+			enemy_CONTACT = true
+		elseif message.group ~= GROUP_enemy then
+			enemy_CONTACT = false
+		end
 	end
 
-	--контакт с врагом
-	if message.group == GROUP_enemy then
-		enemy_CONTACT = true
-	elseif message.group ~= GROUP_enemy then
-		enemy_CONTACT = false
+	--атака от врага
+	if message_id == msg_simple_attack and attack_shield == false then
+		decrease_player_health(self)
 	end
-	
+
 	--контакт с лутом ом ом :)
+	--контакт со "здоровьем"
 	if message_id == add_player_health then
-		print("OK !! add_player_health", player_health)
+		--print("OK !! add_player_health", player_health)
 
-		player_health = player_health + message.player_health
+		player_health = player_health + message.add_loot_score
 
 		--тоже уберу потом (дублирую пока)
 		if player_health > 100 then
@@ -140,16 +171,47 @@ function on_message(self, message_id, message, sender)
 		--дублирую пока чтоб работало
 		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
 	end
+
+	--контакт с "деньгами"
+	if  message_id == add_player_money then
+		print("plus money ", message.add_loot_score)
+
+		money = money + message.add_loot_score
+		label.set_text("/platform#money", money)
+	end
+
+	--контакт с "маной"
+	if  message_id == add_player_mana then
+		print("plus mana ", message.add_loot_score)
+
+		player_mana = player_mana + message.add_loot_score
+
+		--тоже уберу потом (дублирую пока)
+		if player_mana > 100 then
+			player_mana = 100
+		end
+
+		--дублирую пока чтоб работало
+		msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+
+	end
+	--контакт с шипами
+	if message.group == GROUP_spikes then
+		player_health = player_health - 5
+
+		--дублирую пока чтоб работало
+		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
+	end
 end
 
 function on_input(self, action_id, action)
 	if action_id == hash("left") then
 		self.platypus.left(150)
-		
+
 	elseif action_id == hash("right") then
 		self.platypus.right(150)
 	end
-	
+
 	if action_id == hash("jump") then
 		if action.pressed then
 			self.platypus.jump(500)
@@ -166,7 +228,23 @@ function on_input(self, action_id, action)
 	end
 
 	--атака
-	if action_id == hash("attack") and enemy_CONTACT and enemy_health > 0 then
+	if action_id == input_attack and enemy_CONTACT then --and enemy_health > 0
 		decrease_enemy_health(self)
+	end
+
+	--выстрел
+	if action_id == input_shot and action.released then
+		--pos_shot = go.get_position()
+		--print("pos ", pos_shot)
+		msg.post("/shot#shot", "shot")
+	end
+
+	--защита
+	if action_id == hash("shield") then
+		if action.pressed then
+			attack_shield = true
+		elseif action.released then
+			attack_shield = false
+		end
 	end
 end

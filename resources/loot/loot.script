@@ -1,21 +1,77 @@
-local pos = vmath.vector3()
 local create_loot = hash("create_loot")
 local pos_loot = vmath.vector3()
 
 local GROUP_player = hash("player")
 
-local player = nil
+local trigger = hash("trigger_response")
+
+local random = nil
+local add_loot = nil
+local create_loot = hash("create_loot")
+local pos_loot = vmath.vector3()
+
+local GROUP_player = hash("player")
 
 local trigger = hash("trigger_response")
 
+local random = nil
+local add_loot = nil
+
 function on_message(self, message_id, message, sender)
+
+
 	if message_id == create_loot then
-		factory.create("enemy#factory_health", message.pos_loot)
+		local score = label.get_text("/platform#score")
+		score = score + message.score
+		label.set_text("/platform#score", score)
+
+		math.randomseed(os.time())
+		random = math.random(1,3)
+
+		if random == 1 then
+			factory.create("enemy#factory_health", message.pos_loot)
+			add_loot = "add_player_health"
+		elseif random == 2 then
+			factory.create("enemy#factory_money", message.pos_loot)
+			add_loot = "add_player_money"
+
+		elseif random == 3 then
+			factory.create("enemy#factory_mana", message.pos_loot)
+			add_loot = "add_player_mana"
+		end
+
+		--sprite.play_flipbook("loot#loot", "money")
 	end
 
 	--контакт с игроком
 	if message_id == trigger and message.other_group == GROUP_player then
 		go.delete()
-		msg.post("/player#player", "add_player_health", {player_health = 500})
+		msg.post("/player#player", add_loot, {add_loot_score = 100})
+	end
+end
+function on_message(self, message_id, message, sender)
+	if message_id == create_loot then
+		math.randomseed(os.time())
+		random = math.random(1,3)
+
+		if random == 1 then
+			factory.create("enemy#factory_health", message.pos_loot)
+			add_loot = "add_player_health"
+		elseif random == 2 then
+			factory.create("enemy#factory_money", message.pos_loot)
+			add_loot = "add_player_money"
+			
+		elseif random == 3 then
+			factory.create("enemy#factory_mana", message.pos_loot)
+			add_loot = "add_player_mana"
+		end
+		
+		--sprite.play_flipbook("loot#loot", "money")
+	end
+
+	--контакт с игроком
+	if message_id == trigger and message.other_group == GROUP_player then
+		go.delete()
+		msg.post("/player#player", add_loot, {add_loot_score = 100})
 	end
 end

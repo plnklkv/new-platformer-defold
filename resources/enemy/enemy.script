@@ -6,37 +6,49 @@ local pos = vmath.vector3(552, 222, 0)
 local speed = 50
 
 local enemy_health = 50
-local player_health = 100
 
 local GROUP_player = hash("player")
-local player_CONTACT = false
+local player_attack = false
+
+local msg_attack_shield = hash("attack_shield")
+
+local msg_simple_attack = hash("simple_attack")
+
+local score = 0
 
 function init(self)
-	
+
 end
 
---уменьшение здоровья игрока
+--атака на игрока
 local function decrease_player_health(self)
-	player_health = player_health - 10
-	--print(player_health)
-
-	
-	--game over lol
+	msg.post("/player#player", "simple_attack")
 end
+
+--уменьшение здоровья врага, смерть и лут
+local function decrease_enemy_health(self)
+	enemy_health = enemy_health - 10
+
+	if enemy_health == 0 then
+		--выпадает лут
+		msg.post("/loot#loot1", "create_loot", {pos_loot = pos, score = 10})
+
+		--СМЕРТЬ
+		go.delete(go.get_id("enemy"));
+	end
+end
+
 
 function update(self, dt)
 	--self.platypus.update(dt)
 	pos = go.get_position()
-	
+
 	--типа движение врага
 	pos.x = pos.x + speed * dt
 	go.set_position(pos)
 
 	--шкала здоровья
-	--потом убрать проверку
-	if player_health > 0 then
-		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
-	end
+	msg.post("lifebar_progress#lifebar", "set_health", {health = enemy_health, max_health = 50, player = false})
 end
 
 function on_message(self, message_id, message, sender)
@@ -53,9 +65,11 @@ function on_message(self, message_id, message, sender)
 	end
 
 	if message.group == GROUP_player then
-		player_CONTACT = true
 		decrease_player_health(self)
-	else
-		player_CONTACT = false
+	end
+
+	--атака от игрока
+	if message_id == msg_simple_attack then
+		decrease_enemy_health(self)
 	end
 end
