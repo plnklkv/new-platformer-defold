@@ -8,7 +8,6 @@ local speed = 50
 local enemy_health = 50
 
 local GROUP_player = hash("player")
-local player_attack = false
 
 local msg_attack_shield = hash("attack_shield")
 
@@ -16,13 +15,18 @@ local msg_simple_attack = hash("simple_attack")
 
 local score = 0
 
+--для остановки перед игроком
+local player_attack = false
+
+--local pos_enemy = vmath.vector3(750, 280, 0)
+
 function init(self)
 
 end
 
 --атака на игрока
 local function decrease_player_health(self)
-	msg.post("/player#player", "simple_attack")
+	msg.post("player#player", "simple_attack")
 end
 
 --уменьшение здоровья врага, смерть и лут
@@ -31,22 +35,28 @@ local function decrease_enemy_health(self)
 
 	if enemy_health == 0 then
 		--выпадает лут
-		msg.post("/loot#loot1", "create_loot", {pos_loot = pos, score = 10})
+		msg.post("loot#loot1", "create_loot", {pos_loot = pos, score = 10})
 
 		--СМЕРТЬ
 		go.delete(go.get_id("enemy"));
+
+
 	end
 end
 
 
 function update(self, dt)
-	--self.platypus.update(dt)
-	pos = go.get_position()
+	if not player_attack then
+		--self.platypus.update(dt)
+		pos = go.get_position()
 
-	--типа движение врага
-	pos.x = pos.x + speed * dt
-	go.set_position(pos)
+		--типа движение врага
+		pos.x = pos.x + speed * dt
+		go.set_position(pos)
+	end
 
+	player_attack = false
+	
 	--шкала здоровья
 	msg.post("lifebar_progress#lifebar", "set_health", {health = enemy_health, max_health = 50, player = false})
 end
@@ -65,6 +75,8 @@ function on_message(self, message_id, message, sender)
 	end
 
 	if message.group == GROUP_player then
+		--остановка перед атакой перед игроком
+		player_attack = true
 		decrease_player_health(self)
 	end
 

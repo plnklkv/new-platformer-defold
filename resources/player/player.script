@@ -19,7 +19,7 @@ local contact_point_response = hash("contact_point_response")
 
 local money = 0
 
-local pos_shot = vmath.vector3()
+--local pos_shot = vmath.vector3()
 
 local attack_shield = false
 
@@ -72,7 +72,7 @@ end
 
 --атака на врага
 local function decrease_enemy_health(self)
-	msg.post("/enemy#enemy", "simple_attack")
+	msg.post("enemy#enemy", "simple_attack")
 end
 
 --уменьшение здоровья игрока
@@ -159,8 +159,6 @@ function on_message(self, message_id, message, sender)
 	--контакт с лутом ом ом :)
 	--контакт со "здоровьем"
 	if message_id == add_player_health then
-		--print("OK !! add_player_health", player_health)
-
 		player_health = player_health + message.add_loot_score
 
 		--тоже уберу потом (дублирую пока)
@@ -177,7 +175,7 @@ function on_message(self, message_id, message, sender)
 		print("plus money ", message.add_loot_score)
 
 		money = money + message.add_loot_score
-		label.set_text("/platform#money", money)
+		label.set_text("platform#money", money)
 	end
 
 	--контакт с "маной"
@@ -228,7 +226,7 @@ function on_input(self, action_id, action)
 	end
 
 	--атака
-	if action_id == input_attack and enemy_CONTACT then --and enemy_health > 0
+	if action_id == input_attack and enemy_CONTACT and not attack_shield then --and enemy_health > 0
 		decrease_enemy_health(self)
 	end
 
@@ -236,7 +234,9 @@ function on_input(self, action_id, action)
 	if action_id == input_shot and action.released then
 		--pos_shot = go.get_position()
 		--print("pos ", pos_shot)
-		msg.post("/shot#shot", "shot")
+		print("POS PLAYER 0 => ", go.get_position())
+		
+		msg.post("shot#shot", "shot")
 	end
 
 	--защита
