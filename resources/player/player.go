@@ -85,24 +85,6 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "shot"
-  type: "factory"
-  data: "prototype: \"/resources/shot/shot.go\"\n"
-  "load_dynamically: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
   id: "player_collision"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"

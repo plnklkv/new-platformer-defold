@@ -164,7 +164,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "enemy"
+  id: "factory_enemy"
   type: "factory"
   data: "prototype: \"/resources/enemy/enemy.go\"\n"
   "load_dynamically: false\n"

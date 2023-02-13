@@ -1,27 +1,28 @@
 --local platypus = require "platypus.platypus"
-local obstacle_for_enemy_CONTACT = false
-local GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
-
-local pos = vmath.vector3(552, 222, 0)
-local speed = 50
-
-local enemy_health = 50
 
 local GROUP_player = hash("player")
 
 local msg_attack_shield = hash("attack_shield")
-
 local msg_simple_attack = hash("simple_attack")
+local msg_shot_attack = hash("shot_attack")
+
 
 local score = 0
-
---для остановки перед игроком
-local player_attack = false
 
 --local pos_enemy = vmath.vector3(750, 280, 0)
 
 function init(self)
+	self.obstacle_for_enemy_CONTACT = false
+	self.GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 
+	self.speed = 50
+	
+	self.enemy_health = 50
+	self.pos = vmath.vector3(552, 222, 0)
+
+	--для остановки перед игроком
+	self.player_attack = false
+	
 end
 
 --атака на игрока
@@ -30,58 +31,60 @@ local function decrease_player_health(self)
 end
 
 --уменьшение здоровья врага, смерть и лут
-local function decrease_enemy_health(self)
-	enemy_health = enemy_health - 10
+local function decrease_enemy_health(self, damage)
+	self.enemy_health = self.enemy_health - damage
 
-	if enemy_health == 0 then
+	if self.enemy_health <= 0 then
 		--выпадает лут
-		msg.post("loot#loot1", "create_loot", {pos_loot = pos, score = 10})
+		msg.post("loot#loot", "create_loot", {pos_loot = self.pos, score = 10})
 
 		--СМЕРТЬ
 		go.delete(go.get_id("enemy"));
-
-
 	end
 end
 
-
 function update(self, dt)
-	if not player_attack then
+	if not self.player_attack then
 		--self.platypus.update(dt)
-		pos = go.get_position()
+		self.pos = go.get_position()
 
 		--типа движение врага
-		pos.x = pos.x + speed * dt
-		go.set_position(pos)
+		self.pos.x = self.pos.x + self.speed * dt
+		go.set_position(self.pos)
 	end
 
-	player_attack = false
+	self.player_attack = false
 	
 	--шкала здоровья
-	msg.post("lifebar_progress#lifebar", "set_health", {health = enemy_health, max_health = 50, player = false})
+	msg.post("lifebar_progress#lifebar", "set_health", {health = self.enemy_health, max_health = 50, player = false})
 end
 
 function on_message(self, message_id, message, sender)
 	--self.platypus.on_message(message_id, message)
 
 	--столкновение врага с препятсвием
-	if message.group == GROUP_obstacle_for_enemy then
-		if obstacle_for_enemy_CONTACT then
-			obstacle_for_enemy_CONTACT = false
-			speed = -speed
+	if message.group == self.GROUP_obstacle_for_enemy then
+		if self.obstacle_for_enemy_CONTACT then
+			self.obstacle_for_enemy_CONTACT = false
+			self.speed = -self.speed
 		else
-			obstacle_for_enemy_CONTACT = true
+			self.obstacle_for_enemy_CONTACT = true
 		end
 	end
 
 	if message.group == GROUP_player then
 		--остановка перед атакой перед игроком
-		player_attack = true
+		self.player_attack = true
 		decrease_player_health(self)
 	end
 
 	--атака от игрока
 	if message_id == msg_simple_attack then
-		decrease_enemy_health(self)
+		decrease_enemy_health(self, 10)
+	end
+
+	--выстрел от игрока
+	if message_id == msg_shot_attack then
+		decrease_enemy_health(self, 20)
 	end
 end
