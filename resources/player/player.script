@@ -19,8 +19,6 @@ local contact_point_response = hash("contact_point_response")
 
 local money = 0
 
---local pos_shot = vmath.vector3()
-
 local attack_shield = false
 
 local input_attack = hash("attack")
@@ -28,7 +26,6 @@ local input_shot = hash("shot")
 
 
 local msg_simple_attack = hash("simple_attack")
-
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -58,7 +55,8 @@ function init(self)
 	--для выстрела
 	self.firing = false
 	self.pos_shot = go.get_position()
-	
+
+	self.cooldown = true
 end
 
 --ф-ии для карабканья вверх/вниз
@@ -81,11 +79,19 @@ local function decrease_enemy_health(self)
 	msg.post("enemy#enemy", "simple_attack")
 end
 
+--функция для КД
+local function cooldown(self)
+	self.cooldown = false
+	timer.delay(4, false, function()
+		self.cooldown = true
+	end)
+end
+
 --уменьшение здоровья игрока
 local function decrease_player_health(self)
 	--сделать потом чтоб останавливаться
 	player_health = player_health - 10
-
+	cooldown(self)
 	--game over lol
 end
 
@@ -108,20 +114,14 @@ function update(self, dt)
 
 	--стрельба
 	if self.firing then 
-		--self.pos_shot.x = self.pos_shot.x + 50 * dt
-		--go.set_position(self.pos_shot)
 		factory.create("shot#shot")
 		msg.post("shot#shot1", "shot")
-		end
+	end
 	self.firing = false
-	
-	
+
+
 	--шкала здоровья
-
-	--if player_mana >= 0 then
 	msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
-	--end
-
 
 	enemy_CONTACT = false
 
@@ -135,10 +135,6 @@ function update(self, dt)
 	end
 
 	msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
-
-	--print("HEALTH PLAYER = ", player_health)
-
-	--pos_shot = go.get_position()
 end
 
 function on_message(self, message_id, message, sender)
@@ -169,7 +165,7 @@ function on_message(self, message_id, message, sender)
 	end
 
 	--атака от врага
-	if message_id == msg_simple_attack and attack_shield == false then
+	if message_id == msg_simple_attack and attack_shield == false and self.cooldown then
 		decrease_player_health(self)
 	end
 
@@ -211,9 +207,9 @@ function on_message(self, message_id, message, sender)
 
 	end
 	--контакт с шипами
-	if message.group == GROUP_spikes then
+	if message.group == GROUP_spikes and self.cooldown then
 		player_health = player_health - 5
-
+		cooldown(self)
 		--дублирую пока чтоб работало
 		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
 	end

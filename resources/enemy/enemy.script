@@ -1,15 +1,10 @@
---local platypus = require "platypus.platypus"
-
 local GROUP_player = hash("player")
 
 local msg_attack_shield = hash("attack_shield")
 local msg_simple_attack = hash("simple_attack")
 local msg_shot_attack = hash("shot_attack")
 
-
 local score = 0
-
---local pos_enemy = vmath.vector3(750, 280, 0)
 
 function init(self)
 	self.obstacle_for_enemy_CONTACT = false
@@ -60,8 +55,6 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
-	--self.platypus.on_message(message_id, message)
-
 	--столкновение врага с препятсвием
 	if message.group == self.GROUP_obstacle_for_enemy then
 		if self.obstacle_for_enemy_CONTACT then
