@@ -1,0 +1,15 @@
+local pos_chests = vmath.vector3(570, 372, 0)
+local pos2 = vmath.vector3(500, 372, 0)
+local pos_enemy = vmath.vector3(560, 280, 0)
+local pos_enemy2 = vmath.vector3(800, 220, 0)
+local death = hash("death")
+
+function init(self)
+	msg.post("chests#chests", "create_chests", {pos_chests = pos_chests})
+	msg.post("chests#chests", "create_chests", {pos_chests = pos2})
+
+	factory.create("enemy#factory_enemy", pos_enemy)
+	factory.create("enemy#factory_enemy", pos_enemy2)
+
+
+end

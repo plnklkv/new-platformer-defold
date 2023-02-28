@@ -1,0 +1,41 @@
+local GROUP_player = hash("player")
+local msg_create = hash("create_chests")
+local msg_open_chests = hash("open_chests")
+local trigger = hash("trigger_response")
+local player_contact = false
+
+local id_chest = nil
+
+function init(self)	
+end
+
+
+function on_message(self, message_id, message, sender)
+	if message_id == msg_create then
+		factory.create("#factory_chests", message.pos_chests)
+	end
+
+	if message_id == hash("trigger_response") then
+		--контакт с игроком
+		if message.other_group == GROUP_player then
+			if message.enter then
+				player_contact = true
+				id_chest = sender
+			else
+				player_contact = false
+			end
+		end
+	end
+
+	if message_id == msg_open_chests and player_contact then
+		--print("сундук открыт")
+		local url = msg.url("#chests")
+		print(url)
+		msg.post("#chests", "play_animation", {id = hash("loot_chests")})
+
+		--sprite.play_flipbook(url, "loot_chests", function()
+		go.delete(id_chest)
+		--end)
+		print("pos chest ", go.get_position(id_chest))
+	end
+end

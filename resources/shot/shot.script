@@ -1,4 +1,4 @@
-local msg_shot = hash("shot")
+local msg_shot = hash("shot_in_enemy")
 local trigger = hash("trigger_response")
 
 local GROUP_enemy = hash("enemy")
@@ -22,7 +22,7 @@ function on_message(self, message_id, message, sender)
 	--контакт с врагом
 	if message_id == trigger and message.other_group == GROUP_enemy then
 		print("SHOT in enemy")
+		msg.post(message.other_id, "shot_attack")
 		go.delete()
-		msg.post("enemy#enemy", "shot_attack")
 	end
 end

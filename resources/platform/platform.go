@@ -13,6 +13,21 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "game"
+  component: "/resources/game.script"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "collisionobject"
   type: "collisionobject"
@@ -105,7 +120,7 @@ embedded_components {
   ""
   position {
     x: 299.0
-    y: 188.0
+    y: 213.0
     z: 0.0
   }
   rotation {
@@ -179,5 +194,30 @@ embedded_components {
     y: 0.0
     z: 0.0
     w: 1.0
+  }
+}
+embedded_components {
+  id: "sprite"
+  type: "sprite"
+  data: "tile_set: \"/resources/platform/castle.tilesource\"\n"
+  "default_animation: \"anim\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 138.0
+    y: 129.0
+    z: -2.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.343
+    y: 1.421
+    z: 1.0
   }
 }

@@ -27,6 +27,11 @@ components {
     z: 0.0
     w: 1.0
   }
+  scale {
+    x: 0.6
+    y: 0.6
+    z: 1.0
+  }
 }
 embedded_components {
   id: "collision_shot"
@@ -55,8 +60,8 @@ embedded_components {
   "    index: 0\n"
   "    count: 3\n"
   "  }\n"
-  "  data: 15.657\n"
-  "  data: 14.3295\n"
+  "  data: 9.265\n"
+  "  data: 8.5575\n"
   "  data: 10.0\n"
   "}\n"
   "linear_damping: 0.0\n"

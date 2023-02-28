@@ -1,40 +1,48 @@
+go.property("health", 50)
+go.property("max_health", 50)
+
 local GROUP_player = hash("player")
-
-local msg_attack_shield = hash("attack_shield")
-local msg_simple_attack = hash("simple_attack")
-local msg_shot_attack = hash("shot_attack")
-
-local score = 0
 
 function init(self)
 	self.obstacle_for_enemy_CONTACT = false
 	self.GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 
 	self.speed = 50
-	
 	self.enemy_health = 50
-	self.pos = vmath.vector3(552, 222, 0)
+	self.pos = vmath.vector3(0, 0, 0)
 
 	--для остановки перед игроком
 	self.player_attack = false
-	
+
+	self.msg_shot_attack = hash("shot_attack")
+	self.msg_simple_attack = hash("simple_attack")
 end
 
 --атака на игрока
-local function decrease_player_health(self)
+function decrease_player_health(self)
 	msg.post("player#player", "simple_attack")
 end
 
---уменьшение здоровья врага, смерть и лут
-local function decrease_enemy_health(self, damage)
-	self.enemy_health = self.enemy_health - damage
+--уменьшение здоровья врага
+function decrease_enemy_health(self, damage)
 
-	if self.enemy_health <= 0 then
-		--выпадает лут
+	self.health = self.health - damage
+
+	--смерть и лут
+	if self.health <= 0 then
+		go.delete()
 		msg.post("loot#loot", "create_loot", {pos_loot = self.pos, score = 10})
+	else
+		--шкала здоровья
+		self.scale = go.get("#lifebar_background", "scale")
+		--если достигнут макс уровень
+		if self.health > self.max_health then
+			self.scale.x = self.max_health
+		else
+			self.scale.x = (self.health/self.max_health) + 0.001
+		end
 
-		--СМЕРТЬ
-		go.delete(go.get_id("enemy"));
+		go.set("#lifebar_progress", "scale", self.scale)
 	end
 end
 
@@ -49,9 +57,6 @@ function update(self, dt)
 	end
 
 	self.player_attack = false
-	
-	--шкала здоровья
-	msg.post("lifebar_progress#lifebar", "set_health", {health = self.enemy_health, max_health = 50, player = false})
 end
 
 function on_message(self, message_id, message, sender)
@@ -72,12 +77,12 @@ function on_message(self, message_id, message, sender)
 	end
 
 	--атака от игрока
-	if message_id == msg_simple_attack then
+	if message_id == self.msg_simple_attack then
 		decrease_enemy_health(self, 10)
 	end
 
 	--выстрел от игрока
-	if message_id == msg_shot_attack then
+	if message_id == self.msg_shot_attack then
 		decrease_enemy_health(self, 20)
 	end
 end

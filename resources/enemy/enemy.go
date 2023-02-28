@@ -13,6 +13,51 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "lifebar_background"
+  component: "/resources/lifebar/lifebar_background.sprite"
+  position {
+    x: 1.0
+    y: 7.0
+    z: -1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "lifebar_progress"
+  component: "/resources/lifebar/lifebar_progress.sprite"
+  position {
+    x: 0.0
+    y: 8.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "lifebar"
+  component: "/resources/lifebar/lifebar.script"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "sprite"
   type: "sprite"
@@ -71,24 +116,6 @@ embedded_components {
   "angular_damping: 0.0\n"
   "locked_rotation: false\n"
   "bullet: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "factory_lifebar"
-  type: "factory"
-  data: "prototype: \"/resources/lifebar/lifebar.go\"\n"
-  "load_dynamically: false\n"
   ""
   position {
     x: 0.0

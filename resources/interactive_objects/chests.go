@@ -1,6 +1,6 @@
 components {
-  id: "loot1"
-  component: "/resources/loot/loot.script"
+  id: "chests1"
+  component: "/resources/interactive_objects/chests.script"
   position {
     x: 0.0
     y: 0.0
@@ -14,14 +14,14 @@ components {
   }
 }
 embedded_components {
-  id: "collision_health"
+  id: "collisionobject"
   type: "collisionobject"
   data: "collision_shape: \"\"\n"
   "type: COLLISION_OBJECT_TYPE_TRIGGER\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"health\"\n"
+  "group: \"chests\"\n"
   "mask: \"player\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
@@ -40,8 +40,8 @@ embedded_components {
   "    index: 0\n"
   "    count: 3\n"
   "  }\n"
-  "  data: 4.345\n"
-  "  data: 3.2275\n"
+  "  data: 7.267\n"
+  "  data: 7.224\n"
   "  data: 10.0\n"
   "}\n"
   "linear_damping: 0.0\n"
@@ -62,10 +62,10 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "loot"
+  id: "chests"
   type: "sprite"
-  data: "tile_set: \"/resources/loot/loot.atlas\"\n"
-  "default_animation: \"health\"\n"
+  data: "tile_set: \"/resources/interactive_objects/interactive_objects.atlas\"\n"
+  "default_animation: \"chests\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
