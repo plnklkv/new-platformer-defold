@@ -34,6 +34,10 @@ key_trigger {
   input: KEY_E
   action: "interactive"
 }
+key_trigger {
+  input: KEY_X
+  action: "activate_attack"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_1
   action: "touch"

@@ -1,0 +1,57 @@
+	local enemy_sender = nil
+
+	function init(self)
+	--msg.post(".", "set_time_step", {factor = 0, mode = 0})
+	
+	msg.post(".", "acquire_input_focus")
+	
+	msg.post("/game#game_proxy", "acquire_input_focus")
+	
+	self.easy = gui.get_node("easy")	
+	self.normal = gui.get_node("normal")
+	self.hard = gui.get_node("hard")
+	
+	gui.play_flipbook(self.easy, "anim")
+	gui.play_flipbook(self.normal, "anim")
+	gui.play_flipbook(self.hard, "anim")
+
+end
+
+function game_proxy_load(difficulty, diff)
+	
+	gui.play_flipbook(difficulty, "button", function()
+		msg.post(".", "disable")
+		msg.post("game#game_proxy", "set_time_step", {factor = 1, mode = 1})
+
+		--урон игрока и врагов
+		msg.post("default:/player#player", "attack_playerr", {attack_diff = diff})
+		print(enemy_sender)
+		msg.post("default:/enemy", "attack_enemy", {attack_diff = diff})
+		
+		--msg.post("player#player", "shot_player", {shot_diff = })
+		
+		--go.set("player#player", "damage_player", damage_player)
+		--go.set("player#player", "shot_player", shot_player)
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("enemy_sender") then
+		print(332)
+		print(sender)
+		enemy_sender = sender
+	end
+end
+
+function on_input(self, action_id, action)
+	if action.released and (gui.pick_node(self.easy, action.x, action.y)) then
+		game_proxy_load(self.easy, 1)
+		
+	elseif action.released and (gui.pick_node(self.normal, action.x, action.y)) then
+		game_proxy_load(self.normal, 2)
+		
+	elseif action.released and (gui.pick_node(self.hard, action.x, action.y)) then
+		game_proxy_load(self.hard, 3)
+		
+	end
+end

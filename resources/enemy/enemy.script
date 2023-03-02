@@ -1,5 +1,6 @@
-go.property("health", 50)
-go.property("max_health", 50)
+go.property("health", 60)
+go.property("max_health", 60)
+go.property("damage_enemy", 20)
 
 local GROUP_player = hash("player")
 
@@ -15,12 +16,15 @@ function init(self)
 	self.player_attack = false
 
 	self.msg_shot_attack = hash("shot_attack")
-	self.msg_simple_attack = hash("simple_attack")
+	self.msg_simple_attack = hash("simple_attack")	
+
+	msg.post("main:/difficulty#difficulty", "enemy_sender")
 end
 
 --атака на игрока
 function decrease_player_health(self)
 	msg.post("player#player", "simple_attack")
+	print(self.damage_enemy)
 end
 
 --уменьшение здоровья врага
@@ -60,6 +64,12 @@ function update(self, dt)
 end
 
 function on_message(self, message_id, message, sender)
+
+	--сложность
+	if message_id == hash("attack_enemy") then
+		self.damage_enemy = self.damage_enemy*message.attack_diff
+	end
+	
 	--столкновение врага с препятсвием
 	if message.group == self.GROUP_obstacle_for_enemy then
 		if self.obstacle_for_enemy_CONTACT then
@@ -78,11 +88,11 @@ function on_message(self, message_id, message, sender)
 
 	--атака от игрока
 	if message_id == self.msg_simple_attack then
-		decrease_enemy_health(self, 10)
+		decrease_enemy_health(self, message.damage_player)
 	end
 
 	--выстрел от игрока
 	if message_id == self.msg_shot_attack then
-		decrease_enemy_health(self, 20)
+		decrease_enemy_health(self, go.get("player#player", "shot_player"))
 	end
 end

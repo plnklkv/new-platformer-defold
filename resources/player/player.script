@@ -1,3 +1,6 @@
+go.property("damage_player", 30)
+go.property("shot_player", 60)
+
 local platypus = require "platypus.platypus"
 local player_health = 100
 local player_mana = 50
@@ -29,10 +32,10 @@ local input_interactive = hash("interactive")
 local msg_simple_attack = hash("simple_attack")
 
 local GROUP_chests = hash("chests")
-local msg_sender = nil
 
 local button_contact = false
 local open_door = false
+
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -64,6 +67,11 @@ function init(self)
 	self.pos_shot = go.get_position()
 
 	self.cooldown = true
+	self.cooldown_activate_attack = true
+	
+
+	self.damage_enemy = nil
+	
 end
 
 --ф-ии для карабканья вверх/вниз
@@ -82,21 +90,33 @@ local function climb_down(self)
 end
 
 --атака на врага
-local function decrease_enemy_health(self, msg_id)
-	msg.post(msg_id, "simple_attack")
+local function decrease_enemy_health(self, msg_id, damage)
+	print("damsmd = ", damage)
+	msg.post(msg_id, "simple_attack", {damage_player = damage})
 end
 
 --функция для КД
 local function cooldown(self)
-	self.cooldown = false
 	timer.delay(4, false, function()
 		self.cooldown = true
 	end)
+	self.cooldown = false
+	
+end
+
+--функция для первого актииируемого навыка
+local function cooldown_activate_attack(self)
+	timer.delay(10, false, function()
+		self.cooldown_activate_attack = true
+	end)
+	self.cooldown_activate_attack = false
+
 end
 
 --уменьшение здоровья игрока
 local function decrease_player_health(self)
 	--сделать потом чтоб останавливаться
+	--self.damage_enemy = go.get(msg_id, "damage_enemy")
 	player_health = player_health - 10
 	cooldown(self)
 	--game over lol
@@ -150,7 +170,13 @@ function on_message(self, message_id, message, sender)
 		--
 
 	end
-
+	
+	--сложность
+	if message_id == hash("attack_playerr") then
+		self.damage_player = self.damage_player/message.attack_diff
+		self.shot_player = self.shot_player/message.attack_diff
+	end
+	
 	if message_id == hash("trigger_response") then
 		--контакт с лестницей
 		if message.other_group == hash("ladder") then
@@ -241,6 +267,7 @@ function on_message(self, message_id, message, sender)
 		--дублирую пока чтоб работало
 		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
 	end
+
 end
 
 function on_input(self, action_id, action)
@@ -268,7 +295,7 @@ function on_input(self, action_id, action)
 
 	--атака
 	if action_id == input_attack and enemy_CONTACT and not attack_shield then --and enemy_health > 0
-		decrease_enemy_health(self, msg_id)
+		decrease_enemy_health(self, msg_id, self.damage_player)
 	end
 
 	--выстрел
@@ -296,4 +323,11 @@ function on_input(self, action_id, action)
 		open_door = true
 	end
 
+	--активируемый навык
+	if action_id == hash("activate_attack") and self.cooldown_activate_attack and enemy_CONTACT then
+		print("активируемый навык")
+		cooldown_activate_attack(self)
+		decrease_enemy_health(self, msg_id, self.damage_player*1.5)
+		player_mana = player_mana - 20
+	end
 end
