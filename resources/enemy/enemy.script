@@ -35,7 +35,10 @@ function decrease_enemy_health(self, damage)
 	--смерть и лут
 	if self.health <= 0 then
 		go.delete()
-		msg.post("loot#loot", "create_loot", {pos_loot = self.pos, score = 10})
+		msg.post("loot#loot", "create_loot", {pos_loot = self.pos})
+
+		--сообщ игроку что враг мёртв
+		msg.post("player#player", "enemy_death", {score = 100})
 	else
 		--шкала здоровья
 		self.scale = go.get("#lifebar_background", "scale")

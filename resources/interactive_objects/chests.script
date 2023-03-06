@@ -36,6 +36,8 @@ function on_message(self, message_id, message, sender)
 		--sprite.play_flipbook(url, "loot_chests", function()
 		go.delete(id_chest)
 		--end)
+		player_contact = false
+		
 		print("pos chest ", go.get_position(id_chest))
 	end
 end

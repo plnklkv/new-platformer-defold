@@ -1,7 +1,13 @@
 go.property("damage_player", 30)
 go.property("shot_player", 60)
+local speed = 150
+local money = 0
+local score = 0
+local shield = 0
 
 local platypus = require "platypus.platypus"
+
+local max_health = 100
 local player_health = 100
 local player_mana = 50
 
@@ -20,8 +26,6 @@ local add_player_mana = hash("add_player_mana")
 local msg_id = nil
 
 local contact_point_response = hash("contact_point_response")
-
-local money = 0
 
 local attack_shield = false
 
@@ -53,13 +57,11 @@ function init(self)
 		},
 		debug = false,
 		gravity = -800,
-		max_velocity = 300,
 		allow_double_jump = true,
 
 		allow_wall_jump = true,
 		allow_wall_slide = true,
 		wall_slide_gravity = -50,
-
 	})
 
 	--для выстрела
@@ -69,9 +71,16 @@ function init(self)
 	self.cooldown = true
 	self.cooldown_activate_attack = true
 	
-
 	self.damage_enemy = nil
-	
+
+	--сообщения в меню 
+	update_menu(self.damage_player)
+end
+
+function update_menu(damage)
+	label.set_text("platform#score", score)
+	--сообщения в меню
+	msg.post("main:/menu#menu", "message_menu", {score = score, money = money, max_health = max_health, damage = damage, speed = speed, shield = shield})
 end
 
 --ф-ии для карабканья вверх/вниз
@@ -79,14 +88,14 @@ local function climb_up(self)
 	--self.climbing = true
 	self.platypus.gravity = 0
 	self.platypus.velocity.y = 0
-	self.platypus.up(60)
+	self.platypus.up(speed/2)
 end
 
 local function climb_down(self)
 	--self.climbing = true
 	self.platypus.gravity = 0
 	self.platypus.velocity.y = 0
-	self.platypus.down(80)
+	self.platypus.down(speed/2)
 end
 
 --атака на врага
@@ -101,7 +110,6 @@ local function cooldown(self)
 		self.cooldown = true
 	end)
 	self.cooldown = false
-	
 end
 
 --функция для первого актииируемого навыка
@@ -117,7 +125,7 @@ end
 local function decrease_player_health(self)
 	--сделать потом чтоб останавливаться
 	--self.damage_enemy = go.get(msg_id, "damage_enemy")
-	player_health = player_health - 10
+	player_health = player_health - (10 - shield)
 	cooldown(self)
 	--game over lol
 end
@@ -153,15 +161,16 @@ function update(self, dt)
 	enemy_CONTACT = false
 
 	--тоже уберу потом (дублирую пока)
-	if player_health > 100 then
-		player_health = 100
+	if player_health > max_health then
+		player_health = max_health
 	end
 
 	if player_health <= 0 then
-		player_health = 0
+		player_health = 0		
 	end
 
-	msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
+	msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+	
 end
 
 function on_message(self, message_id, message, sender)
@@ -209,15 +218,20 @@ function on_message(self, message_id, message, sender)
 			end
 
 			--дублирую пока чтоб работало
-			msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
+			msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
 		end
 
 		--контакт с "деньгами"
-		if  message.other_group == hash("money") then
+		if message.other_group == hash("money") then
 			print("plus money ")
 
 			money = money + 100
 			label.set_text("platform#money", money)
+
+			--сообщ в меню для денег
+			--msg.post("main:/menu#menu", "money_menu", {money = money})
+
+			update_menu(self.damage_player)
 		end
 
 		--контакт с "маной"
@@ -265,22 +279,44 @@ function on_message(self, message_id, message, sender)
 		player_health = player_health - 5
 		cooldown(self)
 		--дублирую пока чтоб работало
-		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = 100, player = true})
+		msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
 	end
 
+	--сообщение о смерти врага
+	if message_id == hash("enemy_death") then
+		--score = label.get_text("platform#score")
+		score = score + message.score
+		
+		update_menu(self.damage_player)
+	end
+
+	--обновление характеристик от меню
+	if message_id == hash("menu_update_player") then
+		print("menu update message")
+		max_health = message.max_health
+		self.damage_player = message.damage_player
+		--go.set("#", "damage_player", message.damage_player)
+		print(self.damage_player)
+		speed = message.speed
+		shield = message.shield
+		player_health = max_health
+		score = message.score
+		update_menu(self.damage_player)
+		
+	end
 end
 
 function on_input(self, action_id, action)
 	if action_id == hash("left") then
-		self.platypus.left(150)
+		self.platypus.left(speed)
 
 	elseif action_id == hash("right") then
-		self.platypus.right(150)
+		self.platypus.right(speed)
 	end
 
 	if action_id == hash("jump") then
 		if action.pressed then
-			self.platypus.jump(500)
+			self.platypus.jump(speed*2.5)
 		elseif action.released then
 			self.platypus.abort_jump(0.5)
 		end
@@ -324,7 +360,7 @@ function on_input(self, action_id, action)
 	end
 
 	--активируемый навык
-	if action_id == hash("activate_attack") and self.cooldown_activate_attack and enemy_CONTACT then
+	if action_id == hash("activate_attack") and self.cooldown_activate_attack and enemy_CONTACT and player_mana >= 20 then
 		print("активируемый навык")
 		cooldown_activate_attack(self)
 		decrease_enemy_health(self, msg_id, self.damage_player*1.5)

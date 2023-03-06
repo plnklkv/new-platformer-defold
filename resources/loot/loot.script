@@ -8,10 +8,13 @@ local random = nil
 
 function on_message(self, message_id, message, sender)
 	if message_id == create_loot then
-		local score = label.get_text("platform#score")
-		score = score + message.score
-		label.set_text("platform#score", score)
+		--local score = label.get_text("platform#score")
+		--score = score + message.score
+		--label.set_text("platform#score", score)
 
+		--сообщ в меню для очков
+		--msg.post("main:/menu#menu", "message_menu", {score = score})
+		
 		math.randomseed(os.time())
 		random = math.random(1,3)
 

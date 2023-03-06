@@ -16,15 +16,23 @@ function on_message(self, message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
-	if action.released and (gui.pick_node(self.pause_node, action.x, action.y)) then
+	if action.released and (gui.pick_node(self.pause_node, action.x, action.y)) and action_id == hash("touch") then
 		self.paused = not self.paused
 
 		if self.paused then
 			gui.play_flipbook(self.pause_node, hash("right"))
 			msg.post("game#game_proxy", "set_time_step", {factor = 0, mode = 1})
+
+			------
+			msg.post("/menu#menu", "enable")
+			
 		else
 			gui.play_flipbook(self.pause_node, hash("pause"))
 			msg.post("game#game_proxy", "set_time_step", {factor = 1, mode = 1})
+
+			-----
+			msg.post("/menu#menu", "disable")
+			
 		end
 	end
 end

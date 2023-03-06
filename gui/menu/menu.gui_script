@@ -1,0 +1,147 @@
+local max_health = 0
+local damage_player = 0
+local speed = 0
+local shield = 0
+
+--макс улучшения
+local max_value_max_health = 300
+local max_value_damage_player = 70
+local max_value_speed = 400
+local max_value_shield = 20
+
+--стоимость улучшений
+local score_max_health = 60
+local score_damage_player = 80
+local score_speed = 30
+local score_shield = 100
+
+--стоимость улучшений
+local action_max_health = false
+local action_damage_player = false
+local action_speed = false
+local action_shield = false
+
+local score = 0
+
+function button_transparent(button, value)
+	gui.set_color(button, vmath.vector4(value, value, value, value))
+end
+
+function update_transparent()
+		if max_health >= max_value_max_health or score_max_health > score then
+			button_transparent(button_health, 0.5)
+			action_max_health = false
+		else
+			button_transparent(button_health, 1)
+			action_max_health = true
+		end
+		if damage_player >= max_value_damage_player or score_damage_player > score then
+			button_transparent(button_damage, 0.5)
+			action_damage_player = false
+		else
+			button_transparent(button_damage, 1)
+			action_damage_player = true
+		end
+		if speed >= max_value_speed or score_speed > score then
+			button_transparent(button_speed, 0.5)
+			action_speed = false
+		else
+			button_transparent(button_speed, 1)
+			action_speed = true
+		end
+		if shield >= max_value_shield or score_shield > score then
+			button_transparent(button_shield, 0.5)
+			action_shield = false
+		else
+			button_transparent(button_shield, 1)
+			action_shield = true
+		end
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	msg.post("/menu#menu", "disable")
+
+	button_health = gui.get_node("button_health")	
+	button_damage = gui.get_node("button_damage")
+	button_speed = gui.get_node("button_speed")
+	button_shield = gui.get_node("button_shield")
+
+	update_transparent()
+	--button_transparent(0.5)
+end
+
+function update(self, dt)	
+--	update_transparent()
+end
+
+local function update_charact(button, score_update)
+	gui.play_flipbook(button, "button", function()
+		score = score - score_update
+		msg.post("default:/player#player", "menu_update_player", {max_health = max_health, damage_player = damage_player, speed = speed, shield = shield,
+																	score = score})
+	end)
+end
+
+
+function message_update(charact, value, text)
+	if charact < value then
+		gui.set_text(gui.get_node(text), text .. "(" .. charact .. ") => " .. charact + 20)
+	else
+		gui.set_text(gui.get_node(text), text .. "(MAX)")
+	end
+end
+
+function on_message(self, message_id, message, sender)	
+	if message_id == hash("message_menu") then 
+		score = message.score
+		gui.set_text(gui.get_node("score"), "score: " .. score)
+		gui.set_text(gui.get_node("money"), "money: " .. message.money)
+
+		max_health = message.max_health
+		damage_player = message.damage
+		speed = message.speed
+		shield = message.shield
+
+		message_update(max_health, max_value_max_health, "health")
+		message_update(damage_player, max_value_damage_player, "damage")
+		message_update(speed, max_value_speed, "speed")
+		message_update(shield, max_value_shield, "shield")
+
+		gui.set_text(gui.get_node("text_health"), "update for " .. score_max_health)
+		gui.set_text(gui.get_node("text_damage"), "update for " .. score_damage_player)
+		gui.set_text(gui.get_node("text_speed"), "update for " .. score_speed)
+		gui.set_text(gui.get_node("text_shield"), "update for " .. score_shield)
+		
+	end
+end
+
+function on_input(self, action_id, action)
+	--gui.set_visible(button_health, false)
+	
+	if action.released and action_max_health and (gui.pick_node(button_health, action.x, action.y)) and action_id == hash("touch") then
+		max_health = max_health + 20
+		update_charact(button_health, score_max_health)
+		score_max_health = score_max_health + 60
+	end
+	
+	if action.released and action_damage_player and (gui.pick_node(button_damage, action.x, action.y)) and action_id == hash("touch") then
+		damage_player = damage_player + 15
+		update_charact(button_damage, score_damage_player)
+		score_damage_player = score_damage_player + 80
+	end
+
+	if action.released and action_speed and (gui.pick_node(button_speed, action.x, action.y)) and action_id == hash("touch") then
+		speed = speed + 20
+		update_charact(button_speed, score_speed)
+		score_speed = score_speed + 30
+	end
+	
+	if action.released and action_shield and (gui.pick_node(button_shield, action.x, action.y)) and action_id == hash("touch") then
+		shield = shield + 5
+		update_charact(button_shield, score_shield)
+		score_shield = score_shield + 100
+	end
+	
+	update_transparent()
+end
