@@ -51,6 +51,7 @@ embedded_components {
   "mask: \"mana\"\n"
   "mask: \"button\"\n"
   "mask: \"door\"\n"
+  "mask: \"bonfire\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
