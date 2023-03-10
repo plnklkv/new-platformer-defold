@@ -6,6 +6,12 @@ local player_contact = false
 
 local id_chest = nil
 
+
+--получены ли вещи
+local outfit1 = false
+local outfit3 = false
+
+
 function init(self)	
 end
 
@@ -39,5 +45,19 @@ function on_message(self, message_id, message, sender)
 		player_contact = false
 		
 		print("pos chest ", go.get_position(id_chest))
+
+		--либо по позиции делать если конкретный сундук нужен ну наверное...
+		--создание фабрик вещей и отправка экз для буд удаления
+		if not outfit3 then
+			local id_outfit3 = factory.create("/chests#factory_outfit3", go.get_position(id_chest))
+			msg.post("player#player", "id_sender3", {id_outfit3 = id_outfit3})
+			outfit3 = true
+			
+		elseif not outfit1 then
+			local id_outfit1 = factory.create("/chests#factory_outfit1", go.get_position(id_chest))
+			msg.post("player#player", "id_sender1", {id_outfit1 = id_outfit1})
+			outfit1 = true
+		end
+		
 	end
 end

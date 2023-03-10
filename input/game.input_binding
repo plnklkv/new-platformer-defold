@@ -24,7 +24,7 @@ key_trigger {
 }
 key_trigger {
   input: KEY_R
-  action: "shot"
+  action: "activate_attack"
 }
 key_trigger {
   input: KEY_Z
@@ -36,7 +36,7 @@ key_trigger {
 }
 key_trigger {
   input: KEY_X
-  action: "activate_attack"
+  action: "shot"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_1

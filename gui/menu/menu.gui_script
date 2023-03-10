@@ -23,6 +23,10 @@ local action_shield = false
 
 local score = 0
 
+--для вещей
+local i = 1
+
+
 function button_transparent(button, value)
 	gui.set_color(button, vmath.vector4(value, value, value, value))
 end
@@ -70,6 +74,12 @@ function init(self)
 
 	update_transparent()
 	--button_transparent(0.5)
+
+
+	--для вещей
+	self.outfit = {}
+
+	--print(self.outfit[1][2])
 end
 
 function update(self, dt)	
@@ -97,7 +107,6 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("open_menu") then
 		msg.post("game#game_proxy", "set_time_step", {factor = 0, mode = 1})
 		msg.post(".", "enable")
-		print("меню открылось!!")
 	end
 
 	if message_id == hash("message_menu") then 
@@ -121,6 +130,22 @@ function on_message(self, message_id, message, sender)
 		gui.set_text(gui.get_node("text_shield"), "update for " .. score_shield)
 		
 	end
+
+	--добавление вещей
+	if message_id == hash("add_outfit") then
+		
+		--доб вещи в таблицу
+		table.insert(self.outfit, {gui.get_node("outfit" .. i), message.type})
+		--self.outfit[gui.get_node("outfit" .. i)] = 
+
+		--установка изображения вещи
+		gui.set_texture(gui.get_node("outfit" .. i), "resources")
+		gui.play_flipbook(gui.get_node("outfit" .. i), message.type)
+		i = i +1
+		
+	end
+
+	
 end
 
 function on_input(self, action_id, action)

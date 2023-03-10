@@ -42,6 +42,8 @@ local open_door = false
 
 local bonfire_contact = false
 
+local id_outfit1 = 0
+local id_outfit3 = 0
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -58,7 +60,7 @@ function init(self)
 			left = 9, right = 9, top = 14, bottom = 14, offset = vmath.vector3(0, -3, 0)
 		},
 		debug = false,
-		gravity = -800,
+		gravity = -500,
 		allow_double_jump = true,
 
 		allow_wall_jump = true,
@@ -169,7 +171,7 @@ function update(self, dt)
 
 	if player_health <= 0 then
 		player_health = 0
-		--msg.post("main:/game#game_proxy", "disable")
+		
 		--msg.post("main:/game#game_proxy", "enable")
 	end
 
@@ -205,12 +207,12 @@ function on_message(self, message_id, message, sender)
 			if message.enter then
 				self.ladder = true
 			else
-				self.platypus.gravity = -800
+				self.platypus.gravity = -500
 				self.ladder = false
 				--self.climbing = false
 			end
 		end
-
+		
 		--контакт с врагом
 		if message.group == GROUP_enemy then
 			enemy_CONTACT = true
@@ -288,6 +290,25 @@ function on_message(self, message_id, message, sender)
 				print("дверь закрыта")
 			end
 		end
+
+		--контакт с вещами
+		if message.group == hash("outfit1") then
+			print("шлем взят")
+			msg.post("main:/menu#menu", "add_outfit", {type = "outfit1"})
+			go.delete(id_outfit1)
+
+			--
+			
+		end
+
+		if message.group == hash("outfit3") then
+			print("сапоги взяты")
+			msg.post("main:/menu#menu", "add_outfit", {type = "outfit3"})
+			go.delete(id_outfit3)
+
+			--увеличение скорости
+			speed = speed + 50
+		end
 	end
 
 	--атака от врага
@@ -316,6 +337,16 @@ function on_message(self, message_id, message, sender)
 		score = message.score
 		update_menu(self.damage_player)
 	end	
+
+
+	--получения экз вещей для удаления
+	if message_id == hash("id_sender1") then
+		id_outfit1 = message.id_outfit1
+	end
+
+	if message_id == hash("id_sender3") then
+		id_outfit3 = message.id_outfit3
+	end
 end
 
 function on_input(self, action_id, action)
@@ -343,8 +374,6 @@ function on_input(self, action_id, action)
 
 	--открытие меню
 	if action_id == input_interactive and bonfire_contact then
-		print("открытие меню...")
-
 		--сообщ для открытия меню
 		msg.post("main:/menu#menu", "open_menu")
 	end
