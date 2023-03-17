@@ -38,6 +38,7 @@ embedded_components {
   "restitution: 0.5\n"
   "group: \"platform\"\n"
   "mask: \"player\"\n"
+  "mask: \"enemy\"\n"
   "linear_damping: 0.0\n"
   "angular_damping: 0.0\n"
   "locked_rotation: false\n"
@@ -183,6 +184,7 @@ embedded_components {
   type: "factory"
   data: "prototype: \"/resources/enemy/enemy.go\"\n"
   "load_dynamically: false\n"
+  "dynamic_prototype: false\n"
   ""
   position {
     x: 0.0
@@ -207,7 +209,7 @@ embedded_components {
   position {
     x: 138.0
     y: 129.0
-    z: -2.0
+    z: -1.0
   }
   rotation {
     x: 0.0

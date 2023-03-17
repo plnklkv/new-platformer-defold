@@ -48,6 +48,8 @@ local id_outfit3 = 0
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
+	print("ЗАГРУЖЕНО")
+	
 	self.input_state = {}
 	self.platypus = platypus.create({
 		collisions = {
@@ -74,6 +76,7 @@ function init(self)
 
 	self.cooldown = true
 	self.cooldown_activate_attack = true
+	self.cooldown_scill2 = true
 	
 	self.damage_enemy = nil
 
@@ -110,19 +113,27 @@ end
 
 --функция для КД
 local function cooldown(self)
-	timer.delay(4, false, function()
+	self.cooldown = false
+	
+	timer.delay(2, false, function()
 		self.cooldown = true
 	end)
-	self.cooldown = false
 end
 
 --функция для первого актииируемого навыка
 local function cooldown_activate_attack(self)
-	timer.delay(10, false, function()
+	self.cooldown_activate_attack = false
+	timer.delay(4, false, function()
 		self.cooldown_activate_attack = true
 	end)
-	self.cooldown_activate_attack = false
+end
 
+--для второго акт навыка
+function cooldown_scill2(self, value)
+	self.cooldown_scill2 = false
+	timer.delay(go.get("weapon#weapon", "cooldown"), false, function()
+		self.cooldown_scill2 = true
+	end)
 end
 
 --уменьшение здоровья игрока
@@ -150,19 +161,10 @@ function update(self, dt)
 		end
 	end
 
-
-	--стрельба
-	if self.firing then 
-		factory.create("shot#shot")
-		msg.post("shot#shot1", "shot_in_enemy")
-	end
-	self.firing = false
-
-
 	--шкала здоровья
 	msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
 
-	enemy_CONTACT = false
+	enemy_CONTACT = false --убрать и поставить кд на аьаки обычные
 
 	--тоже уберу потом (дублирую пока)
 	if player_health > max_health then
@@ -171,8 +173,8 @@ function update(self, dt)
 
 	if player_health <= 0 then
 		player_health = 0
-		
-		--msg.post("main:/game#game_proxy", "enable")
+
+		--msg.post("main:/menu#menu", "game_reset")		
 	end
 
 	msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
@@ -187,7 +189,7 @@ function on_message(self, message_id, message, sender)
 	end
 	
 	--сложность
-	if message_id == hash("attack_playerr") then
+	if message_id == hash("diff_attack") then
 		self.damage_player = self.damage_player/message.attack_diff
 		self.shot_player = self.shot_player/message.attack_diff
 	end
@@ -215,55 +217,14 @@ function on_message(self, message_id, message, sender)
 		
 		--контакт с врагом
 		if message.group == GROUP_enemy then
+			if message.enter then
 			enemy_CONTACT = true
 			--
 			msg_id = message.other_id
-		elseif message.group ~= GROUP_enemy then
+		else
 			enemy_CONTACT = false
 		end
-
-		--контакт с лутом ом ом :)
-		--контакт со "здоровьем"
-		if message.other_group == hash("health") then
-			player_health = player_health + 10
-
-			--тоже уберу потом (дублирую пока)
-			if player_health > 100 then
-				player_health = 100
-			end
-
-			--дублирую пока чтоб работало
-			msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
-		end
-
-		--контакт с "деньгами"
-		if message.other_group == hash("money") then
-			print("plus money ")
-
-			money = money + 100
-			label.set_text("platform#money", money)
-
-			--сообщ в меню для денег
-			--msg.post("main:/menu#menu", "money_menu", {money = money})
-
-			update_menu(self.damage_player)
-		end
-
-		--контакт с "маной"
-		if  message.other_group == hash("mana") then
-			print("plus mana ")
-
-			player_mana = player_mana + 10
-
-			--тоже уберу потом (дублирую пока)
-			if player_mana > 100 then
-				player_mana = 100
-			end
-
-			--дублирую пока чтоб работало
-			msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
-
-		end
+	end
 
 		--контакт с шипами
 		if message.group == GROUP_spikes and self.cooldown then
@@ -338,7 +299,74 @@ function on_message(self, message_id, message, sender)
 		update_menu(self.damage_player)
 	end	
 
+	--активируемый навык
+	if message_id == hash("scill") and player_mana >= 20 then
+		if message.scill == 1 and self.cooldown_activate_attack and enemy_CONTACT then
+			print("активируемый навык")
+			cooldown_activate_attack(self)
+			decrease_enemy_health(self, msg_id, self.damage_player*1.5)
+			player_mana = player_mana - 20
+			
+		--второй активируемый навык: метание меча
+		elseif message.scill == 2 and self.cooldown_scill2 then
+			factory.create("weapon#factory_weapon")
+			msg.post("weapon#weapon", "create_weapon")
+			cooldown_scill2(self, 15)
+			print(go.get("weapon#weapon", "damage"))
+				
+		--третий актив навык: телепорт
+		elseif message.scill == 3 then
 
+			
+		end
+	end
+
+	--сообщ для получения лута
+	if message_id == hash("loot_contact") then
+		--контакт с лутом ом ом :)
+		--контакт со "здоровьем"
+		if message.collision == hash("collision_health") then
+			player_health = player_health + 10
+
+			--тоже уберу потом (дублирую пока)
+			if player_health > 100 then
+				player_health = 100
+			end
+
+			--дублирую пока чтоб работало
+			msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+		end
+
+		--контакт с "деньгами"
+		if message.collision == hash("collision_money") then
+			print("plus money ")
+
+			money = money + 100
+			label.set_text("platform#money", money)
+
+			--сообщ в меню для денег
+			--msg.post("main:/menu#menu", "money_menu", {money = money})
+
+			update_menu(self.damage_player)
+		end
+
+		--контакт с "маной"
+		if  message.collision == hash("collision_mana") then
+			print("plus mana ")
+
+			player_mana = player_mana + 10
+
+			--тоже уберу потом (дублирую пока)
+			if player_mana > 100 then
+				player_mana = 100
+			end
+
+			--дублирую пока чтоб работало
+			msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+
+		end
+	end
+	
 	--получения экз вещей для удаления
 	if message_id == hash("id_sender1") then
 		id_outfit1 = message.id_outfit1
@@ -379,13 +407,18 @@ function on_input(self, action_id, action)
 	end
 	
 	--атака
-	if action_id == input_attack and enemy_CONTACT and not attack_shield then --and enemy_health > 0
+	if action_id == input_attack and enemy_CONTACT and not attack_shield then
 		decrease_enemy_health(self, msg_id, self.damage_player)
+		--[[enemy_CONTACT = false
+		timer.delay(15, false, function()
+			enemy_CONTACT = true
+		end)]]--
 	end
 
 	--выстрел
 	if action_id == input_shot and action.released then
-		self.firing = true
+		factory.create("shot#shot")
+		msg.post("shot#shot1", "shot_in_enemy")
 	end
 
 	--защита
@@ -406,13 +439,5 @@ function on_input(self, action_id, action)
 	if action_id == input_interactive and button_contact and not open_door then
 		print("открытие двери...")
 		open_door = true
-	end
-
-	--активируемый навык
-	if action_id == hash("activate_attack") and self.cooldown_activate_attack and enemy_CONTACT and player_mana >= 20 then
-		print("активируемый навык")
-		cooldown_activate_attack(self)
-		decrease_enemy_health(self, msg_id, self.damage_player*1.5)
-		player_mana = player_mana - 20
 	end
 end

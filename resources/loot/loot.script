@@ -33,7 +33,8 @@ function on_message(self, message_id, message, sender)
 
 	--контакт с игроком
 	if message_id == trigger and message.other_group == GROUP_player then
-		msg.post("player#player", "loot_contact")
+		msg.post("player#player", "loot_contact", {collision = sender.fragment})
 		go.delete()
+		--print()
 	end
 end

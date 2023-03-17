@@ -1,0 +1,27 @@
+local select_scill = 1
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	--gui.set_color(self.scill1, vmath.vector4(1, 1, 1, 1))
+end
+
+function on_message(self, message_id, message, sender)
+	
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("change_scill") and action.pressed then
+		gui.set_color(gui.get_node("scill" .. select_scill), vmath.vector4(0.5, 0.5, 0.5, 0.5))
+		if select_scill == 3 then
+			select_scill = 1
+		else
+			select_scill = select_scill + 1
+		end
+		gui.set_color(gui.get_node("scill" .. select_scill), vmath.vector4(1, 1, 1, 1))
+	end
+
+	if action_id == hash("scill") and action.pressed then
+		msg.post("default:/player#player", "scill", {scill = select_scill})
+	end
+end

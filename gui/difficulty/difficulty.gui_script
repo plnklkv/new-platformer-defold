@@ -24,7 +24,7 @@ function game_proxy_load(difficulty, diff)
 		msg.post("game#game_proxy", "set_time_step", {factor = 1, mode = 1})
 
 		--урон игрока и врагов
-		msg.post("default:/player#player", "attack_playerr", {attack_diff = diff})
+		msg.post("default:/player#player", "diff_attack", {attack_diff = diff})
 		print(enemy_sender)
 		msg.post("default:/enemy", "attack_enemy", {attack_diff = diff})
 		

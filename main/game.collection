@@ -28,6 +28,7 @@ instances {
   id: "player"
   prototype: "/resources/player/player.go"
   children: "shot"
+  children: "weapon"
   position {
     x: 560.0
     y: 390.0
@@ -148,6 +149,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/enemy/enemy.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -291,6 +293,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/loot/loot_health.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -309,6 +312,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/loot/loot_mana.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -327,6 +331,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/loot/loot_money.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -382,6 +387,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/interactive_objects/chests.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -400,6 +406,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/outfit/outfit3.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -418,6 +425,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/outfit/outfit1.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -675,6 +683,7 @@ embedded_instances {
   "  type: \"factory\"\n"
   "  data: \"prototype: \\\"/resources/shot/shot.go\\\"\\n"
   "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
   "\"\n"
   "  position {\n"
   "    x: 0.0\n"
@@ -791,6 +800,99 @@ embedded_instances {
   scale3 {
     x: 0.619
     y: 0.791
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "scill"
+  data: "components {\n"
+  "  id: \"scill\"\n"
+  "  component: \"/gui/scill/scill.gui\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 272.0
+    y: 158.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.555
+    y: 0.576
+    z: 1.0
+  }
+}
+embedded_instances {
+  id: "weapon"
+  data: "components {\n"
+  "  id: \"weapon\"\n"
+  "  component: \"/gui/scill/scill2/weapon.script\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "  property_decls {\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"factory_weapon\"\n"
+  "  type: \"factory\"\n"
+  "  data: \"prototype: \\\"/gui/scill/scill2/weapon.go\\\"\\n"
+  "load_dynamically: false\\n"
+  "dynamic_prototype: false\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "  }\n"
+  "  rotation {\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
+  "    z: 0.0\n"
+  "    w: 1.0\n"
+  "  }\n"
+  "}\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.0
+    y: 1.0
     z: 1.0
   }
 }

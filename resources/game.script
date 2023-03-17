@@ -11,5 +11,10 @@ function init(self)
 	factory.create("enemy#factory_enemy", pos_enemy)
 	factory.create("enemy#factory_enemy", pos_enemy2)
 
+	--msg.post("main:/game#game_proxy", "reset")
+	print("MKMKML")
+end
+
+function on_message(self, message_id, message, sender)
 
 end

@@ -24,10 +24,10 @@ key_trigger {
 }
 key_trigger {
   input: KEY_R
-  action: "activate_attack"
+  action: "scill"
 }
 key_trigger {
-  input: KEY_Z
+  input: KEY_G
   action: "shield"
 }
 key_trigger {
@@ -35,8 +35,12 @@ key_trigger {
   action: "interactive"
 }
 key_trigger {
-  input: KEY_X
+  input: KEY_ENTER
   action: "shot"
+}
+key_trigger {
+  input: KEY_Q
+  action: "change_scill"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_1

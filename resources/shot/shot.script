@@ -21,7 +21,6 @@ function on_message(self, message_id, message, sender)
 
 	--контакт с врагом
 	if message_id == trigger and message.other_group == GROUP_enemy then
-		print("SHOT in enemy")
 		msg.post(message.other_id, "shot_attack")
 		go.delete()
 	end

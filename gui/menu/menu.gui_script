@@ -100,10 +100,21 @@ function message_update(charact, value, text)
 		gui.set_text(gui.get_node(text), text .. "(" .. charact .. ") => " .. charact + 20)
 	else
 		gui.set_text(gui.get_node(text), text .. "(MAX)")
+		gui.set_enabled(gui.get_node("button_" ..text), false)
 	end
 end
 
 function on_message(self, message_id, message, sender)	
+	--[[if message_id == hash("game_reset") then
+		print("MKMKML")
+		msg.post(":game#game_proxy", "disable")
+		msg.post("/game#game_proxy", "unload")
+
+		msg.post("/game#game_proxy", "load")
+		
+
+	end]]--
+
 	if message_id == hash("open_menu") then
 		msg.post("game#game_proxy", "set_time_step", {factor = 0, mode = 1})
 		msg.post(".", "enable")
