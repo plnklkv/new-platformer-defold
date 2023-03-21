@@ -1,7 +1,7 @@
 go.property("damage_player", 30)
 go.property("shot_player", 60)
 local speed = 150
-local money = 0
+local money = 10
 local score = 0
 local shield = 0
 
@@ -70,6 +70,9 @@ function init(self)
 		wall_slide_gravity = -50,
 	})
 
+	label.set_text("platform#money", money)
+	label.set_text("platform#score", score)
+	
 	--для выстрела
 	self.firing = false
 	self.pos_shot = go.get_position()
@@ -88,6 +91,7 @@ function update_menu(damage)
 	label.set_text("platform#score", score)
 	--сообщения в меню
 	msg.post("main:/menu#menu", "message_menu", {score = score, money = money, max_health = max_health, damage = damage, speed = speed, shield = shield})
+	msg.post("main:/update_scills#update_scills", "message_update_scills", {money = money})
 end
 
 --ф-ии для карабканья вверх/вниз
@@ -297,28 +301,25 @@ function on_message(self, message_id, message, sender)
 		player_health = max_health
 		score = message.score
 		update_menu(self.damage_player)
-	end	
-
+	end
+	
 	--активируемый навык
-	if message_id == hash("scill") and player_mana >= 20 then
-		if message.scill == 1 and self.cooldown_activate_attack and enemy_CONTACT then
-			print("активируемый навык")
-			cooldown_activate_attack(self)
-			decrease_enemy_health(self, msg_id, self.damage_player*1.5)
-			player_mana = player_mana - 20
-			
-		--второй активируемый навык: метание меча
-		elseif message.scill == 2 and self.cooldown_scill2 then
-			factory.create("weapon#factory_weapon")
-			msg.post("weapon#weapon", "create_weapon")
-			cooldown_scill2(self, 15)
-			print(go.get("weapon#weapon", "damage"))
-				
-		--третий актив навык: телепорт
-		elseif message.scill == 3 then
+	if message_id == hash("scill1") and player_mana >= 20 and self.cooldown_activate_attack and enemy_CONTACT then
+		print("активируемый навык")
+		cooldown_activate_attack(self)
+		decrease_enemy_health(self, msg_id, self.damage_player*1.5)
+		player_mana = player_mana - 20
+	end
+	--второй активируемый навык: метание меча
+	if message_id == hash("scill2") and player_mana >= 20 and self.cooldown_scill2 then
+		factory.create("weapon#factory_weapon")
+		--msg.post("weapon#weapon", "create_weapon")
+		cooldown_scill2(self, go.get("weapon#weapon", "cooldown"))
+	end
+	--третий актив навык: телепорт
+	if message_id == hash("scill3") and player_mana >= 20 then
 
-			
-		end
+		
 	end
 
 	--сообщ для получения лута

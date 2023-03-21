@@ -1,9 +1,14 @@
 local id = nil
 
 local cooldown_bool = true
-go.property("damage", 50) --крч так делать по уровням значения и получать в плэйере
-go.property("diff_speed", 0)
+go.property("damage", 20) --крч так делать по уровням значения и получать в плэйере
+local damage = 20
+--go.property("enemy_line", false)
+local enemy_line = false
+--go.property("speed", 1)
+local speed = 1
 go.property("cooldown", 15)
+local cooldown = 15
 
 function init(self)
 	self.pos_weapon = go.get_position()
@@ -14,10 +19,23 @@ end
 
 function update(self, dt)
 	self.pos_weapon.x = self.pos_weapon.x + 100 * dt
-	go.set_position(self.pos_weapon)
+	go.set_position(self.pos_weapon)	
+	
+	self.damage = damage
+	self.cooldown = cooldown
 end
 
 function on_message(self, message_id, message, sender)
+	--обновление характеристик навыков
+	if message_id == hash("update_level_scill") then
+		damage = message.damage
+		enemy_line = message.enemy_line
+		speed = message.speed
+		cooldown = message.cooldown
+
+	end
+
+	
 	if message_id == hash("create_weapon") then
 		--id = factory.create("weapon#factory_weapon")
 		--self.pos_shot = message.pos
@@ -26,12 +44,16 @@ function on_message(self, message_id, message, sender)
 			print("удаление")
 			go.delete()
 		end)]]--
+
 	end
 
 	--контакт с врагом
-	if message_id == hash("trigger_response") and message.other_group == hash("enemy") then
-		msg.post(message.other_id, "scill2_attack", {damage = damage, diff_speed = diff_speed})
+	if message_id == hash("trigger_response") and message.enter and message.other_group == hash("enemy") then
+		msg.post(message.other_id, "scill2_attack", {damage = damage, speed = speed})
+		
 		print("атака навыком 2")
-		go.delete()
+		if enemy_line == false then
+			go.delete()
+		end
 	end
 end

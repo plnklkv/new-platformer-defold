@@ -1,5 +1,6 @@
 local select_scill = 1
 
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	
@@ -22,6 +23,12 @@ function on_input(self, action_id, action)
 	end
 
 	if action_id == hash("scill") and action.pressed then
-		msg.post("default:/player#player", "scill", {scill = select_scill})
+		if select_scill == 1 then 
+			msg.post("default:/player#player", "scill1")
+		end
+		
+		if select_scill == 2 then
+			msg.post("default:/player#player", "scill2")
+		end
 	end
 end
