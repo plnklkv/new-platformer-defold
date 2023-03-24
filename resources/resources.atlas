@@ -46,6 +46,10 @@ images {
   image: "/gui/scill/weapon.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/resources/platform/ladder.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 animations {
   id: "button"
   images {
