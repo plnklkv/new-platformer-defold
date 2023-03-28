@@ -1,6 +1,6 @@
 local pos_chests = vmath.vector3(570, 372, 0)
 local pos2 = vmath.vector3(500, 372, 0)
-local pos_enemy = vmath.vector3(560, 280, 0)
+local pos_enemy = vmath.vector3(600, 280, 0)
 local pos_enemy2 = vmath.vector3(800, 220, 0)
 local pos3 = vmath.vector3(640, 220, 0)
 local death = hash("death")
@@ -14,7 +14,6 @@ function init(self)
 	factory.create("enemy#factory_enemy", pos3)
 	
 	--msg.post("main:/game#game_proxy", "reset")
-	print("MKMKML")
 end
 
 function on_message(self, message_id, message, sender)

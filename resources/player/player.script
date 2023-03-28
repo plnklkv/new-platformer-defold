@@ -45,6 +45,9 @@ local bonfire_contact = false
 local id_outfit1 = 0
 local id_outfit3 = 0
 
+--первый навык
+local damage_scill1 = 1.5
+local cooldown_scill1 = 6
 
 --третий навык
 local scill3 = false
@@ -135,7 +138,7 @@ end
 --функция для первого актииируемого навыка
 local function cooldown_activate_attack(self)
 	self.cooldown_activate_attack = false
-	timer.delay(4, false, function()
+	timer.delay(cooldown_scill1, false, function()
 		self.cooldown_activate_attack = true
 	end)
 end
@@ -329,7 +332,8 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("scill1") and player_mana >= 20 and self.cooldown_activate_attack and enemy_CONTACT then
 		print("активируемый навык")
 		cooldown_activate_attack(self)
-		decrease_enemy_health(self, msg_id, self.damage_player*1.5)
+		decrease_enemy_health(self, msg_id, self.damage_player*damage_scill1)
+		print("ataka = *", damage_scill1, " kd = ", cooldown_scill1)
 		player_mana = player_mana - 20
 	end
 	--второй активируемый навык: метание меча
@@ -357,6 +361,12 @@ function on_message(self, message_id, message, sender)
 		
 	end
 
+	--обновление первого навыка
+	if message_id == hash("update_level_scill1") then
+		damage_scill1 = message.damage
+		cooldown_scill1 = message.cooldown
+	end
+	
 	--обновление третьего навыка
 	if message_id == hash("update_level_scill3") then
 		meter = message.meter

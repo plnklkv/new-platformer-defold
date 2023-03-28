@@ -1,11 +1,10 @@
 image: ""
-tile_width: 16
-tile_height: 16
+tile_width: 80
+tile_height: 80
 tile_margin: 0
 tile_spacing: 0
 collision: ""
 material_tag: "tile"
-collision_groups: "default"
 animations {
   id: "anim"
   start_tile: 1

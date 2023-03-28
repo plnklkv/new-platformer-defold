@@ -10,6 +10,7 @@ local money_scill2 = 30
 local money_scill3 = 40
 
 --разрешить нажать на кнопку
+local action_scill1 = false
 local action_scill2 = false
 local action_scill3 = false
 
@@ -18,13 +19,13 @@ function button_transparent2(button, value)
 end
 
 function update_transparent2()
-	--[[if level1 >= 3 or money_scill1 > money then
+	if level1 >= 3 or money_scill1 > money then
 		button_transparent(button_scill1, 0.5)
 		action_scill1 = false
 	else
 		button_transparent(button_scill1, 1)
 		action_scill1 = true
-	end]]--
+	end
 	if level2 >= 3 or money_scill2 > money then
 		button_transparent2(button_scill2, 0.5)
 		action_scill2 = false
@@ -54,6 +55,19 @@ function init(self)
 end
 
 function update_scill(scill, level)
+	if scill == 1 then
+		if level1 == 2 then
+			print("навык 1 - уровень 2")
+			msg.post("default:/player#player", "update_level_scill1", {damage = 1.7, cooldown = 4})
+		elseif level1 == 3 then
+			print("навык 1 - уровень 3")
+			msg.post("default:/player#player", "update_level_scill1", {damage = 2, cooldown = 2})
+
+		end
+
+		money = money - money_scill1
+	end
+
 	if scill == 2 then
 		if level2 == 2 then
 			print("навык 2 - уровень 2")
@@ -70,10 +84,10 @@ function update_scill(scill, level)
 	if scill == 3 then
 		if level3 == 2 then
 			print("навык 3 - уровень 2")
-			msg.post("default:/player#player", "update_level_scill3", {meter = 300, splash = false, cooldown = 12})
+			msg.post("default:/player#player", "update_level_scill3", {meter = 200, splash = false, cooldown = 12})
 		elseif level3 == 3 then
 			print("навык 3 - уровень 3")
-			msg.post("default:/player#player", "update_level_scill3", {meter = 300, splash = true, cooldown = 10})
+			msg.post("default:/player#player", "update_level_scill3", {meter = 200, splash = true, cooldown = 10})
 			
 		end
 		
@@ -120,7 +134,10 @@ function on_input(self, action_id, action)
 		msg.post("menu#menu", "enable")
 	end
 
-	if action.released and (gui.pick_node(button_scill1, action.x, action.y)) and action_id == hash("touch") then
+	if action.released and action_scill1 and (gui.pick_node(button_scill1, action.x, action.y)) and action_id == hash("touch") then
+		level1 = level1 + 1 
+		update_scill(1, level1)
+		money_scill1 = money_scill1 + 10
 	end
 	
 	if action.released and action_scill2 and (gui.pick_node(button_scill2, action.x, action.y)) and action_id == hash("touch") then

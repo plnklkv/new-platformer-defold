@@ -147,7 +147,7 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("add_outfit") then
 		
 		--доб вещи в таблицу
-		table.insert(self.outfit, {gui.get_node("outfit" .. i), message.type})
+		--table.insert(self.outfit, {gui.get_node("outfit" .. i), message.type})
 		--self.outfit[gui.get_node("outfit" .. i)] = 
 
 		--установка изображения вещи
