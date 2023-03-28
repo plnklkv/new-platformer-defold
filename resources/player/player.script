@@ -166,7 +166,7 @@ function update(self, dt)
 	--стоит ли игрок на земле
 	local ground_contact = self.platypus.has_ground_contact()
 
-	if self.input_state[hash("up")] then
+	--[[if self.input_state[hash("up")] then
 		if self.ladder then
 			climb_up(self)
 		end
@@ -174,7 +174,7 @@ function update(self, dt)
 		if self.ladder and not ground_contact then
 			climb_down(self)
 		end
-	end
+	end]]--
 
 	--шкала здоровья
 	msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
@@ -333,14 +333,16 @@ function on_message(self, message_id, message, sender)
 		print("активируемый навык")
 		cooldown_activate_attack(self)
 		decrease_enemy_health(self, msg_id, self.damage_player*damage_scill1)
-		print("ataka = *", damage_scill1, " kd = ", cooldown_scill1)
-		player_mana = player_mana - 20
+		--print("ataka = *", damage_scill1, " kd = ", cooldown_scill1)
+		player_mana = player_mana - 20 
 	end
 	--второй активируемый навык: метание меча
 	if message_id == hash("scill2") and player_mana >= 20 and self.cooldown_scill2 then
 		factory.create("weapon#factory_weapon")
 		--msg.post("weapon#weapon", "create_weapon")
 		cooldown_scill2(self, go.get("weapon#weapon", "cooldown"))
+		--player_mana = player_mana - 20 
+		
 	end
 	--третий актив навык: телепорт
 	if message_id == hash("scill3") and scill3 == false and player_mana >= 20 then
@@ -358,6 +360,8 @@ function on_message(self, message_id, message, sender)
 		timer.delay(cooldown_scill3, false, function()
 			scill3 = false
 		end)
+
+		--player_mana = player_mana - 20 
 		
 	end
 
@@ -433,9 +437,13 @@ end
 function on_input(self, action_id, action)
 	if action_id == hash("left") then
 		self.platypus.left(speed)
+		sprite.set_hflip("#sprite", true)
+		
 
 	elseif action_id == hash("right") then
 		self.platypus.right(speed)
+		sprite.set_hflip("#sprite", false)
+		
 	end
 
 	if action_id == hash("jump") then
@@ -449,7 +457,7 @@ function on_input(self, action_id, action)
 	--карабканье
 	if action_id == hash("up") and self.ladder then
 		climb_up(self)
-	elseif action_id == hash("down") and self.ladder then
+	elseif action_id == hash("down") and self.ladder and not ground_contact then
 		climb_down(self)
 	end
 

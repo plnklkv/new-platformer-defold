@@ -48,6 +48,26 @@ instances {
     z: 1.0
   }
 }
+instances {
+  id: "player2"
+  prototype: "/resources/player2/player2.go"
+  position {
+    x: 476.0
+    y: 396.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 0.8
+    y: 0.8
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "door"

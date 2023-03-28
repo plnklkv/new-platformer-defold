@@ -35,12 +35,36 @@ key_trigger {
   action: "interactive"
 }
 key_trigger {
-  input: KEY_ENTER
+  input: KEY_Q
+  action: "change_scill"
+}
+key_trigger {
+  input: KEY_LEFT
+  action: "left2"
+}
+key_trigger {
+  input: KEY_RIGHT
+  action: "right2"
+}
+key_trigger {
+  input: KEY_RSHIFT
+  action: "jump2"
+}
+key_trigger {
+  input: KEY_UP
+  action: "up2"
+}
+key_trigger {
+  input: KEY_DOWN
+  action: "down2"
+}
+key_trigger {
+  input: KEY_L
   action: "shot"
 }
 key_trigger {
-  input: KEY_Q
-  action: "change_scill"
+  input: KEY_ENTER
+  action: "rebound"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_1
