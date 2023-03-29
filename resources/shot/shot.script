@@ -3,20 +3,23 @@ local trigger = hash("trigger_response")
 
 local GROUP_enemy = hash("enemy")
 
-local shot_bool = false
 
 function init(self)
 	self.pos_shot = go.get_position()
+	self.speed = 100
 end
 
 function update(self, dt)
-	self.pos_shot.x = self.pos_shot.x + 50 * dt
+	self.pos_shot.x = self.pos_shot.x + self.speed * dt
 	go.set_position(self.pos_shot)
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == msg_shot then
-		shot_bool=true
+		if not message.right then
+			self.speed = -self.speed
+			sprite.set_hflip("#sprite", true)
+		end
 	end
 
 	--контакт с врагом

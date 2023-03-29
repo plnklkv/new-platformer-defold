@@ -11,11 +11,14 @@ local max_health = 100
 local player_health = 100
 local player_mana = 50
 
+--для выстрела
+local right = true
 
-local function play_animation(self, animation)
+
+local function play_animation(self, animation, func)
 	if self.current_animation ~= animation then
 		self.current_animation = animation
-		sprite.play_flipbook("#sprite", animation)
+		sprite.play_flipbook("#sprite", animation, func)
 	end
 end
 
@@ -33,7 +36,7 @@ function init(self)
 			},
 			left = 9, right = 9, top = 14, bottom = 14, offset = vmath.vector3(0, -3, 0)
 		},
-		debug = true,
+		debug = false,
 		gravity = -500,
 		allow_double_jump = true,
 
@@ -42,10 +45,12 @@ function init(self)
 		wall_slide_gravity = -50,
 	})
 
-	self.actions = {} -- mapping of input states (action_id mapped to pressed state)
+	self.actions = {}
 	
 	--текущая анимация
 	self.current_animation = nil
+
+	
 end
 
 --ф-ии для карабканья вверх/вниз
@@ -71,17 +76,19 @@ function update(self, dt)
 	
 	if self.actions[hash("left2")] then
 		self.platypus.left(speed)
+		right = false
 		--sprite.play_flipbook("#sprite", hash("run"))
-		play_animation(self, hash("run"))
+		play_animation(self, hash("run"), nil)
 		sprite.set_hflip("#sprite", true)
 
 	elseif self.actions[hash("right2")] then
 		self.platypus.right(speed)
-		play_animation(self, hash("run"))
+		right = true
+		play_animation(self, hash("run"), nil)
 		sprite.set_hflip("#sprite", false)
 
-	else
-		play_animation(self, hash("anim"))	
+	--else
+		--play_animation(self, hash("anim"))
 	end
 
 	if self.actions[hash("jump2")] then
@@ -96,6 +103,8 @@ function update(self, dt)
 	elseif self.actions[hash("down2")] and self.ladder and not ground_contact then
 		climb_down(self)
 	end
+
+
 end
 
 function on_message(self, message_id, message, sender)
@@ -109,7 +118,7 @@ function on_message(self, message_id, message, sender)
 				self.ladder = true
 			else
 				self.platypus.gravity = -500
-				self.ladder = false				
+				self.ladder = false
 			end
 		end
 	end
@@ -122,5 +131,12 @@ function on_input(self, action_id, action)
 		elseif action.released then
 			self.actions[action_id] = false
 		end
+	end
+
+	if action_id == hash("shot") and action.released then
+		play_animation(self, hash("attack"), function()
+			local id = factory.create("shot#shot")
+			msg.post(id, "shot_in_enemy", {right = right})
+		end)
 	end
 end

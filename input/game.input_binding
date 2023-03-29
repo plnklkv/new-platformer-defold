@@ -66,6 +66,14 @@ key_trigger {
   input: KEY_ENTER
   action: "rebound"
 }
+key_trigger {
+  input: KEY_LBRACKET
+  action: "select_arrow"
+}
+key_trigger {
+  input: KEY_SEMICOLON
+  action: "select_scill"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_1
   action: "touch"

@@ -1,8 +1,4 @@
 images {
-  image: "/resources/shot/shot.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/gui/pause/pause.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -52,6 +48,10 @@ images {
 }
 images {
   image: "/resources/platform/spiker.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/resources/shot/arrow.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 animations {
