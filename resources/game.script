@@ -1,6 +1,6 @@
 local pos_chests = vmath.vector3(570, 372, 0)
 local pos2 = vmath.vector3(500, 372, 0)
-local pos_enemy = vmath.vector3(600, 280, 0)
+local pos_enemy = vmath.vector3(600, 320, 0)
 local pos_enemy2 = vmath.vector3(800, 220, 0)
 local pos3 = vmath.vector3(640, 220, 0)
 local death = hash("death")

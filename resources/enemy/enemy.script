@@ -5,7 +5,30 @@ go.property("speed", 50)
 
 local GROUP_player = hash("player")
 
+local platypus = require "platypus.platypus"
+
 function init(self)
+	self.input_state = {}
+	self.platypus = platypus.create({
+		collisions = {
+			separation = platypus.SEPARATION_RAYS,
+			groups = {
+				[hash("platform")] = platypus.DIR_ALL,
+				[hash("obstacle_for_enemy")] = platypus.DIR_ALL,
+
+			},
+			left = 9, right = 9, top = 14, bottom = 14, offset = vmath.vector3(0, -3, 0)
+		},
+		debug = true,
+		gravity = -500,
+		allow_double_jump = true,
+
+		allow_wall_jump = true,
+		allow_wall_slide = true,
+		wall_slide_gravity = -50,
+	})
+
+	
 	self.obstacle_for_enemy_CONTACT = false
 	self.GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 
@@ -23,9 +46,13 @@ function init(self)
 end
 
 --атака на игрока
-function decrease_player_health(self)
-	msg.post("player#player", "simple_attack")
-	print(self.damage_enemy)
+function decrease_player_health(self, player)
+	if player == hash("player") then
+		msg.post("player#player", "simple_attack")
+	elseif player == hash("player2") then
+			msg.post("player2#player2", "simple_attack")
+	end
+	--print(self.damage_enemy)
 end
 
 --уменьшение здоровья врага
@@ -55,6 +82,8 @@ function decrease_enemy_health(self, damage)
 end
 
 function update(self, dt)
+	self.platypus.update(dt)
+	
 	if not self.player_attack then
 		--self.platypus.update(dt)
 		self.pos = go.get_position()
@@ -87,7 +116,8 @@ function on_message(self, message_id, message, sender)
 	if message.group == GROUP_player then
 		--остановка перед атакой перед игроком
 		self.player_attack = true
-		decrease_player_health(self)
+		decrease_player_health(self, message.other_id)
+		print(hash_to_hex(message.other_id))
 	end
 
 	--атака от игрока
@@ -97,7 +127,7 @@ function on_message(self, message_id, message, sender)
 
 	--выстрел от игрока
 	if message_id == self.msg_shot_attack then
-		decrease_enemy_health(self, go.get("player#player", "shot_player"))
+		decrease_enemy_health(self, go.get("player2#player2", "shot_player"))
 	end
 
 	if message_id == hash("scill2_attack") then

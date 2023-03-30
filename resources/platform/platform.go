@@ -120,7 +120,7 @@ embedded_components {
   "material: \"/builtins/fonts/label.material\"\n"
   ""
   position {
-    x: 299.0
+    x: 253.0
     y: 213.0
     z: 0.0
   }

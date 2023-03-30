@@ -14,6 +14,9 @@ local player_mana = 50
 --для выстрела
 local right = true
 
+--для отскока
+local cooldown_rebound = true
+
 
 local function play_animation(self, animation, func)
 	if self.current_animation ~= animation then
@@ -104,7 +107,16 @@ function update(self, dt)
 		climb_down(self)
 	end
 
-
+	--отскок в сторону
+	if self.actions[hash("rebound")]and cooldown_rebound then
+		cooldown_rebound = false
+		local pos = go.get_position()
+		go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x - 60, go.EASING_LINEAR, 0.2, 0)
+		timer.delay(2, false, function()
+			cooldown_rebound = true
+		end)
+	end
+	
 end
 
 function on_message(self, message_id, message, sender)

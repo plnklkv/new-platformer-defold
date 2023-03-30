@@ -1,5 +1,5 @@
 go.property("damage_player", 30)
-go.property("shot_player", 60)
+--go.property("shot_player", 60)
 local speed = 150
 local money = 1000
 local score = 0
@@ -174,7 +174,7 @@ function update(self, dt)
 	end]]--
 
 	--шкала здоровья
-	msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+	msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
 
 	enemy_CONTACT = false --убрать и поставить кд на аьаки обычные
 
@@ -189,7 +189,7 @@ function update(self, dt)
 		--msg.post("main:/menu#menu", "game_reset")		
 	end
 
-	msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+	msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
 	
 end
 
@@ -203,7 +203,8 @@ function on_message(self, message_id, message, sender)
 	--сложность
 	if message_id == hash("diff_attack") then
 		self.damage_player = self.damage_player/message.attack_diff
-		self.shot_player = self.shot_player/message.attack_diff
+		--сделать норм мб отдельный скрипт
+		--self.shot_player = self.shot_player/message.attack_diff
 	end
 	
 	if message_id == hash("trigger_response") then
@@ -251,7 +252,7 @@ function on_message(self, message_id, message, sender)
 			player_health = player_health - 5
 			cooldown(self)
 			--дублирую пока чтоб работало
-			msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
 		end
 		
 		--контакт с кнопкой для открытия двери
@@ -351,7 +352,6 @@ function on_message(self, message_id, message, sender)
 		
 		go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x + meter, go.EASING_LINEAR, 0.3, 0, function()
 			attack_shield = false
-
 		end)
 		
 		timer.delay(cooldown_scill3, false, function()
@@ -388,7 +388,7 @@ function on_message(self, message_id, message, sender)
 			end
 
 			--дублирую пока чтоб работало
-			msg.post("lifebar_progress1#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
 		end
 
 		--контакт с "деньгами"
@@ -416,7 +416,7 @@ function on_message(self, message_id, message, sender)
 			end
 
 			--дублирую пока чтоб работало
-			msg.post("lifebar_progress1#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+			msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
 
 		end
 	end
