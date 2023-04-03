@@ -1,6 +1,6 @@
 components {
-  id: "platform"
-  component: "/resources/platform/platform.tilemap"
+  id: "game"
+  component: "/resources/game.script"
   position {
     x: 0.0
     y: 0.0
@@ -14,8 +14,8 @@ components {
   }
 }
 components {
-  id: "game"
-  component: "/resources/game.script"
+  id: "envir"
+  component: "/resources/platform/envir.tilemap"
   position {
     x: 0.0
     y: 0.0
@@ -31,7 +31,7 @@ components {
 embedded_components {
   id: "collisionobject"
   type: "collisionobject"
-  data: "collision_shape: \"/resources/platform/platform.tilemap\"\n"
+  data: "collision_shape: \"/resources/platform/envir.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_STATIC\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
@@ -59,7 +59,7 @@ embedded_components {
 embedded_components {
   id: "obstacle_for_enemy"
   type: "collisionobject"
-  data: "collision_shape: \"/resources/platform/platform.tilemap\"\n"
+  data: "collision_shape: \"/resources/platform/envir.tilemap\"\n"
   "type: COLLISION_OBJECT_TYPE_TRIGGER\n"
   "mass: 0.0\n"
   "friction: 0.1\n"
@@ -120,8 +120,8 @@ embedded_components {
   "material: \"/builtins/fonts/label.material\"\n"
   ""
   position {
-    x: 253.0
-    y: 213.0
+    x: 244.0
+    y: 387.0
     z: 0.0
   }
   rotation {
@@ -129,6 +129,11 @@ embedded_components {
     y: 0.0
     z: 0.0
     w: 1.0
+  }
+  scale {
+    x: 2.0
+    y: 2.0
+    z: 1.0
   }
 }
 embedded_components {
@@ -168,8 +173,8 @@ embedded_components {
   "material: \"/builtins/fonts/label.material\"\n"
   ""
   position {
-    x: -85.0
-    y: 213.0
+    x: -166.0
+    y: 396.0
     z: 0.0
   }
   rotation {
@@ -178,37 +183,23 @@ embedded_components {
     z: 0.0
     w: 1.0
   }
-}
-embedded_components {
-  id: "factory_enemy"
-  type: "factory"
-  data: "prototype: \"/resources/enemy/enemy.go\"\n"
-  "load_dynamically: false\n"
-  "dynamic_prototype: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
+  scale {
+    x: 2.0
+    y: 2.0
+    z: 1.0
   }
 }
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/resources/platform/castle.tilesource\"\n"
-  "default_animation: \"anim\"\n"
+  data: "tile_set: \"/resources/resources.atlas\"\n"
+  "default_animation: \"background\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {
-    x: 138.0
-    y: 129.0
+    x: 63.0
+    y: 171.0
     z: -1.0
   }
   rotation {
@@ -218,8 +209,108 @@ embedded_components {
     w: 1.0
   }
   scale {
-    x: 1.343
-    y: 1.421
+    x: 3.049
+    y: 2.662
     z: 1.0
+  }
+}
+embedded_components {
+  id: "sprite1"
+  type: "sprite"
+  data: "tile_set: \"/resources/resources.atlas\"\n"
+  "default_animation: \"middleground\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 62.0
+    y: 188.0
+    z: -0.8
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 3.054
+    y: 2.428
+    z: 1.0
+  }
+}
+embedded_components {
+  id: "sprite2"
+  type: "sprite"
+  data: "tile_set: \"/resources/resources.atlas\"\n"
+  "default_animation: \"house-a\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: -93.0
+    y: 10.0
+    z: 0.2
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.431
+    y: 1.431
+    z: 1.431
+  }
+}
+embedded_components {
+  id: "sprite3"
+  type: "sprite"
+  data: "tile_set: \"/resources/resources.atlas\"\n"
+  "default_animation: \"house-b\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: -133.0
+    y: 165.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 0.792
+    y: 0.792
+    z: 0.792
+  }
+}
+embedded_components {
+  id: "sprite4"
+  type: "sprite"
+  data: "tile_set: \"/resources/resources.atlas\"\n"
+  "default_animation: \"house-c\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 384.0
+    y: -13.0
+    z: 0.1
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.303
+    y: 1.182
+    z: 1.325
   }
 }

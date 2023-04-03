@@ -1,6 +1,6 @@
-image: "/resources/platform/castle.jpg"
-tile_width: 400
-tile_height: 200
+image: "/resources/platform/layer_1.png"
+tile_width: 320
+tile_height: 180
 tile_margin: 0
 tile_spacing: 0
 collision: ""

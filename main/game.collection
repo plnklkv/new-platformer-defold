@@ -29,9 +29,30 @@ instances {
   prototype: "/resources/player/player.go"
   children: "weapon"
   position {
-    x: 560.0
-    y: 390.0
+    x: 87.0
+    y: 106.0
+    z: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
     z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 1.5
+    y: 1.5
+    z: 1.0
+  }
+}
+instances {
+  id: "player2"
+  prototype: "/resources/player2/player2.go"
+  children: "shot"
+  position {
+    x: 42.0
+    y: 105.0
+    z: 1.0
   }
   rotation {
     x: 0.0
@@ -42,27 +63,6 @@ instances {
   scale3 {
     x: 1.0
     y: 1.0
-    z: 1.0
-  }
-}
-instances {
-  id: "player2"
-  prototype: "/resources/player2/player2.go"
-  children: "shot"
-  position {
-    x: 476.0
-    y: 396.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale3 {
-    x: 0.8
-    y: 0.8
     z: 1.0
   }
 }
@@ -145,9 +145,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 597.0
-    y: 286.0
-    z: 0.0
+    x: 997.0
+    y: 312.0
+    z: 0.9
   }
   rotation {
     x: 0.0
@@ -187,7 +187,7 @@ embedded_instances {
   position {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: 1.0
   }
   rotation {
     x: 0.0
@@ -463,7 +463,7 @@ embedded_instances {
   position {
     x: 0.0
     y: 0.0
-    z: 0.0
+    z: 1.0
   }
   rotation {
     x: 0.0
@@ -472,8 +472,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 1.5
+    y: 1.5
     z: 1.0
   }
 }
@@ -549,9 +549,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 305.0
-    y: 383.0
-    z: 0.0
+    x: 572.0
+    y: 305.0
+    z: 0.9
   }
   rotation {
     x: 0.0
@@ -586,8 +586,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 272.0
-    y: 158.0
+    x: 22.0
+    y: -20.0
     z: 0.0
   }
   rotation {
@@ -667,10 +667,17 @@ embedded_instances {
   "default_animation: \\\"ladder\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"
+  "size {\\n"
+  "  x: 40.0\\n"
+  "  y: 92.0\\n"
+  "  z: 0.0\\n"
+  "  w: 0.0\\n"
+  "}\\n"
+  "size_mode: SIZE_MODE_MANUAL\\n"
   "\"\n"
   "  position {\n"
   "    x: -103.0\n"
-  "    y: 130.0\n"
+  "    y: 132.0\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -690,7 +697,7 @@ embedded_instances {
   "\"\n"
   "  position {\n"
   "    x: -103.0\n"
-  "    y: 48.0\n"
+  "    y: 53.0\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -750,9 +757,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 315.0
+    y: -72.0
+    z: 0.2
   }
   rotation {
     x: 0.0
@@ -858,9 +865,9 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
+    x: 547.0
+    y: 84.0
+    z: 0.9
   }
   rotation {
     x: 0.0
@@ -955,8 +962,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 0.0
-    y: 0.0
+    x: -37.0
+    y: -35.0
     z: 0.0
   }
   rotation {
@@ -966,8 +973,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 2.0
+    y: 2.0
     z: 1.0
   }
 }
@@ -999,7 +1006,7 @@ embedded_instances {
   position {
     x: -198.0
     y: 236.0
-    z: -1.0
+    z: -0.1
   }
   rotation {
     x: 0.0
@@ -1083,7 +1090,7 @@ embedded_instances {
   position {
     x: -190.0
     y: 213.0
-    z: -1.0
+    z: -0.1
   }
   rotation {
     x: 0.0
@@ -1147,8 +1154,8 @@ embedded_instances {
   children: "manabar_progress2"
   data: ""
   position {
-    x: 469.0
-    y: 0.0
+    x: 678.0
+    y: -40.0
     z: 0.0
   }
   rotation {
@@ -1158,8 +1165,8 @@ embedded_instances {
     w: 1.0
   }
   scale3 {
-    x: 1.0
-    y: 1.0
+    x: 2.0
+    y: 2.0
     z: 1.0
   }
 }
@@ -1191,7 +1198,7 @@ embedded_instances {
   position {
     x: -198.0
     y: 236.0
-    z: -1.0
+    z: -0.1
   }
   rotation {
     x: 0.0
@@ -1275,7 +1282,7 @@ embedded_instances {
   position {
     x: -190.0
     y: 213.0
-    z: -1.0
+    z: -0.1
   }
   rotation {
     x: 0.0

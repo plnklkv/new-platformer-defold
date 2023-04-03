@@ -95,7 +95,7 @@ function update(self, dt)
 	end
 
 	if self.actions[hash("jump2")] then
-			self.platypus.jump(speed*2.5)
+		self.platypus.jump(speed*2.5)
 	elseif not self.actions[hash("jump2")] then
 		self.platypus.abort_jump(0.5)
 				

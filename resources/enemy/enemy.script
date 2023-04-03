@@ -4,6 +4,7 @@ go.property("damage_enemy", 20)
 go.property("speed", 50)
 
 local GROUP_player = hash("player")
+local GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 
 local platypus = require "platypus.platypus"
 
@@ -30,7 +31,6 @@ function init(self)
 
 	
 	self.obstacle_for_enemy_CONTACT = false
-	self.GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 
 	--self.speed = 50
 	--self.enemy_health = 50
@@ -47,9 +47,9 @@ end
 
 --атака на игрока
 function decrease_player_health(self, player)
-	if player == hash("player") then
+	if player == hash("/player") then
 		msg.post("player#player", "simple_attack")
-	elseif player == hash("player2") then
+	elseif player == hash("/player2") then
 			msg.post("player2#player2", "simple_attack")
 	end
 	--print(self.damage_enemy)
@@ -89,22 +89,24 @@ function update(self, dt)
 		self.pos = go.get_position()
 
 		--типа движение врага
-		self.pos.x = self.pos.x + self.speed * dt
-		go.set_position(self.pos)
+		self.platypus.left(self.speed)
+		--self.pos.x = self.pos.x + self.speed * dt
+		--go.set_position(self.pos)
 	end
 
 	self.player_attack = false
 end
 
 function on_message(self, message_id, message, sender)
-
+	self.platypus.on_message(message_id, message)
+	
 	--сложность
 	if message_id == hash("attack_enemy") then
 		self.damage_enemy = self.damage_enemy*message.attack_diff
 	end
 	
 	--столкновение врага с препятсвием
-	if message.group == self.GROUP_obstacle_for_enemy then
+	if message.group == GROUP_obstacle_for_enemy then
 		if self.obstacle_for_enemy_CONTACT then
 			self.obstacle_for_enemy_CONTACT = false
 			self.speed = -self.speed
@@ -117,7 +119,7 @@ function on_message(self, message_id, message, sender)
 		--остановка перед атакой перед игроком
 		self.player_attack = true
 		decrease_player_health(self, message.other_id)
-		print(hash_to_hex(message.other_id))
+		print(message.other_id)
 	end
 
 	--атака от игрока
