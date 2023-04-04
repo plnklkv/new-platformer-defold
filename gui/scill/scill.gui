@@ -11,7 +11,7 @@ background_color {
 }
 nodes {
   position {
-    x: 77.0
+    x: 80.0
     y: 35.0
     z: 0.0
     w: 1.0
@@ -23,8 +23,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 1.823
-    y: 1.641
+    x: 1.4
+    y: 1.4
     z: 1.0
     w: 1.0
   }
@@ -68,7 +68,7 @@ nodes {
 }
 nodes {
   position {
-    x: 176.0
+    x: 150.0
     y: 35.0
     z: 0.0
     w: 1.0
@@ -80,8 +80,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 1.823
-    y: 1.641
+    x: 1.4
+    y: 1.4
     z: 1.0
     w: 1.0
   }
@@ -125,7 +125,7 @@ nodes {
 }
 nodes {
   position {
-    x: 276.0
+    x: 220.0
     y: 35.0
     z: 0.0
     w: 1.0
@@ -137,8 +137,8 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 1.823
-    y: 1.641
+    x: 1.4
+    y: 1.4
     z: 1.0
     w: 1.0
   }

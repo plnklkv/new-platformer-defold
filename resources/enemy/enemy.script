@@ -4,38 +4,16 @@ go.property("damage_enemy", 20)
 go.property("speed", 50)
 
 local GROUP_player = hash("player")
-local GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 
-local platypus = require "platypus.platypus"
 
 function init(self)
-	self.input_state = {}
-	self.platypus = platypus.create({
-		collisions = {
-			separation = platypus.SEPARATION_RAYS,
-			groups = {
-				[hash("platform")] = platypus.DIR_ALL,
-				[hash("obstacle_for_enemy")] = platypus.DIR_ALL,
-
-			},
-			left = 9, right = 9, top = 14, bottom = 14, offset = vmath.vector3(0, -3, 0)
-		},
-		debug = true,
-		gravity = -500,
-		allow_double_jump = true,
-
-		allow_wall_jump = true,
-		allow_wall_slide = true,
-		wall_slide_gravity = -50,
-	})
-
-	
+	self.GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 	self.obstacle_for_enemy_CONTACT = false
 
 	--self.speed = 50
 	--self.enemy_health = 50
-	self.pos = vmath.vector3(0, 0, 0)
-
+	self.pos = go.get_position()
+	
 	--для остановки перед игроком
 	self.player_attack = false
 
@@ -82,31 +60,25 @@ function decrease_enemy_health(self, damage)
 end
 
 function update(self, dt)
-	self.platypus.update(dt)
-	
 	if not self.player_attack then
-		--self.platypus.update(dt)
-		self.pos = go.get_position()
 
 		--типа движение врага
-		self.platypus.left(self.speed)
-		--self.pos.x = self.pos.x + self.speed * dt
-		--go.set_position(self.pos)
+		self.pos.x = self.pos.x + self.speed * dt
+		go.set_position(self.pos)
 	end
 
 	self.player_attack = false
 end
 
 function on_message(self, message_id, message, sender)
-	self.platypus.on_message(message_id, message)
 	
 	--сложность
 	if message_id == hash("attack_enemy") then
 		self.damage_enemy = self.damage_enemy*message.attack_diff
 	end
-	
+		
 	--столкновение врага с препятсвием
-	if message.group == GROUP_obstacle_for_enemy then
+	if message.group == self.GROUP_obstacle_for_enemy then
 		if self.obstacle_for_enemy_CONTACT then
 			self.obstacle_for_enemy_CONTACT = false
 			self.speed = -self.speed
@@ -114,14 +86,17 @@ function on_message(self, message_id, message, sender)
 			self.obstacle_for_enemy_CONTACT = true
 		end
 	end
-
-	if message.group == GROUP_player then
-		--остановка перед атакой перед игроком
-		self.player_attack = true
-		decrease_player_health(self, message.other_id)
-		print(message.other_id)
-	end
-
+		
+		if message.group == GROUP_player then
+			--остановка перед атакой перед игроком
+			self.player_attack = true
+			------------------------------------self.speed = 0
+			
+			decrease_player_health(self, message.other_id)
+			print(message.other_id)
+		
+		end
+	
 	--атака от игрока
 	if message_id == self.msg_simple_attack then
 		decrease_enemy_health(self, message.damage_player)

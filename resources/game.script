@@ -1,9 +1,14 @@
 local pos_chests = vmath.vector3(1050, 75, 0)
 local pos2 = vmath.vector3(600, 130, 0)
-local pos_enemy = vmath.vector3(800, 100, 0)
-local pos_enemy2 = vmath.vector3(850, 100, 0)
-local pos3 = vmath.vector3(900, 100, 0)
+local pos_enemy = vmath.vector3(800, 80, 0)
+local pos_enemy2 = vmath.vector3(850, 80, 0)
+local pos3 = vmath.vector3(900, 80, 0)
 local death = hash("death")
+
+go.property("money", 1000)
+go.property("score", 0)
+
+
 
 function init(self)
 	msg.post("chests#chests", "create_chests", {pos_chests = pos_chests})
@@ -12,7 +17,9 @@ function init(self)
 	factory.create("enemy#factory_enemy", pos_enemy)
 	factory.create("enemy#factory_enemy", pos_enemy2)
 	factory.create("enemy#factory_enemy", pos3)
-	
+
+	label.set_text("platform#money", self.money)
+	label.set_text("platform#score", self.score)
 	--msg.post("main:/game#game_proxy", "reset")
 end
 
