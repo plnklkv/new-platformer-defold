@@ -55,14 +55,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/resources/platform/layer_1.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
-  image: "/resources/platform/layer_2.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/resources/platform/background.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -80,6 +72,18 @@ images {
 }
 images {
   image: "/resources/platform/house-c.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/resources/level2/layer_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/resources/level2/parallax-demon-woods-close-trees.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/resources/level2/background_0.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 animations {

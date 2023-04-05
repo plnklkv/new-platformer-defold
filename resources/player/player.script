@@ -285,6 +285,7 @@ if message_id == hash("trigger_response") then
 	if message.group == hash("door") then
 		if open_door then
 			print("дверь открыта")
+			msg.post("main:/menu#menu", "open_level2")
 		else
 			print("дверь закрыта")
 		end
