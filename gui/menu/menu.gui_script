@@ -148,6 +148,10 @@ function on_message(self, message_id, message, sender)
 		print("Unloaded", sender)
 	end
 
+	if message_id == hash("message_score_menu") then
+		score = message.score
+		gui.set_text(gui.get_node("score"), "score: " .. score)
+	end
 	if message_id == hash("message_menu") then 
 		score = message.score
 		gui.set_text(gui.get_node("score"), "score: " .. score)

@@ -29,7 +29,7 @@ function decrease_player_health(self, player)
 	if player == hash("/player") then
 		msg.post("player#player", "simple_attack")
 	elseif player == hash("/player2") then
-			msg.post("player2#player2", "simple_attack")
+		msg.post("player2#player2", "simple_attack")
 	end
 	--print(self.damage_enemy)
 end
@@ -45,7 +45,7 @@ function decrease_enemy_health(self, damage)
 		msg.post("loot#loot", "create_loot", {pos_loot = self.pos})
 
 		--сообщ игроку что враг мёртв
-		msg.post("player#player", "enemy_death", {score = 100})
+		msg.post("platform#game", "enemy_death", {score = 100})
 	else
 		--шкала здоровья
 		self.scale = go.get("#lifebar_background", "scale")
@@ -104,7 +104,6 @@ function on_message(self, message_id, message, sender)
 
 			--sprite.play_flipbook("#sprite", "")			
 			decrease_player_health(self, message.other_id)
-			print(message.other_id)
 		
 		end
 	
@@ -119,7 +118,6 @@ function on_message(self, message_id, message, sender)
 	end
 
 	if message_id == hash("scill2_attack") then
-		print("DAMAGE = ", message.damage)
 		self.speed = self.speed / message.speed
 
 		decrease_enemy_health(self, message.damage)

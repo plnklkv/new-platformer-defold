@@ -25,6 +25,22 @@ local function play_animation(self, animation, func)
 	end
 end
 
+--функция для КД
+local function cooldown(self)
+	self.cooldown = false
+
+	go.animate("#sprite", "tint", go.PLAYBACK_LOOP_FORWARD, vmath.vector4(1,0,0,1), go.EASING_LINEAR, 0.3, 0, function()
+		go.animate("#sprite", "tint", go.PLAYBACK_LOOP_FORWARD, vmath.vector4(1,1,1,1), go.EASING_LINEAR, 0.3)
+	end)
+
+	timer.delay(2, false, function()
+		self.cooldown = true
+		go.cancel_animations("#sprite", "tint")
+		go.set("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
+
+	end)
+end
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 
@@ -53,6 +69,7 @@ function init(self)
 	--текущая анимация
 	self.current_animation = nil
 
+	self.cooldown = true
 	
 end
 
@@ -71,54 +88,76 @@ local function climb_down(self)
 	self.platypus.down(speed/2)
 end
 
+--уменьшение здоровья игрока
+local function decrease_player_health(self)
+	--сделать потом чтоб останавливаться
+	--self.damage_enemy = go.get(msg_id, "damage_enemy")
+	player_health = player_health - (50 - shield)
+	cooldown(self)
+	--game over lol
+end
+
 function update(self, dt)
 	self.platypus.update(dt)
-	
-	
-	--стоит ли игрок на земле
-	local ground_contact = self.platypus.has_ground_contact()
-	
-	if self.actions[hash("left2")] then
-		self.platypus.left(speed)
-		right = false
-		--sprite.play_flipbook("#sprite", hash("run"))
-	
-		play_animation(self, hash("run"), nil)
-		sprite.set_hflip("#sprite", true)
 
-	elseif self.actions[hash("right2")] then
-		self.platypus.right(speed)
-		right = true
-		play_animation(self, hash("run"), nil)
-		sprite.set_hflip("#sprite", false)
+	if player_health <= 0 then
+		player_health = 0
 
-	--else
-		--play_animation(self, hash("anim"))
-	end
+		msg.post("main:/pause#pause", "death_player2", {player2 = true})
+		play_animation(self, hash("death"), nil)
+		
+	else
+		--стоит ли игрок на земле
+		local ground_contact = self.platypus.has_ground_contact()
+		
+		if self.actions[hash("left2")] then
+			self.platypus.left(speed)
+			right = false
+			--sprite.play_flipbook("#sprite", hash("run"))
+		
+			play_animation(self, hash("run"), nil)
+			sprite.set_hflip("#sprite", true)
 
-	if self.actions[hash("jump2")] then
-		self.platypus.jump(speed*2.5)
-	elseif not self.actions[hash("jump2")] then
-		self.platypus.abort_jump(0.5)
-				
-	end
-	
-	if self.actions[hash("up2")] and self.ladder then
-		climb_up(self)
-	elseif self.actions[hash("down2")] and self.ladder and not ground_contact then
-		climb_down(self)
-	end
+		elseif self.actions[hash("right2")] then
+			self.platypus.right(speed)
+			right = true
+			play_animation(self, hash("run"), nil)
+			sprite.set_hflip("#sprite", false)
 
-	--отскок в сторону
-	if self.actions[hash("rebound")]and cooldown_rebound then
-		cooldown_rebound = false
-		local pos = go.get_position()
-		go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x - 60, go.EASING_LINEAR, 0.2, 0)
-		timer.delay(2, false, function()
-			cooldown_rebound = true
-		end)
+		--else
+			--play_animation(self, hash("anim"))
+		end
+
+		if self.actions[hash("jump2")] then
+			self.platypus.jump(speed*2.5)
+		elseif not self.actions[hash("jump2")] then
+			self.platypus.abort_jump(0.5)
+					
+		end
+		
+		if self.actions[hash("up2")] and self.ladder then
+			climb_up(self)
+		elseif self.actions[hash("down2")] and self.ladder and not ground_contact then
+			climb_down(self)
+		end
+
+		--отскок в сторону
+		if self.actions[hash("rebound")]and cooldown_rebound then
+			cooldown_rebound = false
+			local pos = go.get_position()
+			if right then
+				go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x - 60, go.EASING_LINEAR, 0.2, 0)
+			else
+				go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x + 60, go.EASING_LINEAR, 0.2, 0)
+			end
+			
+			timer.delay(2, false, function()
+				cooldown_rebound = true
+			end)
+		end
+
+		msg.post("bar2#lifebar", "set_health", {health = player_health, max_health = max_health, player1 = false})
 	end
-	
 end
 
 function on_message(self, message_id, message, sender)
@@ -135,6 +174,22 @@ function on_message(self, message_id, message, sender)
 				self.ladder = false
 			end
 		end
+
+		--контакт с шипами
+		if message.group == hash("spikes") and self.cooldown then
+
+			print("spik")
+			player_health = player_health - 5
+			cooldown(self)
+			--дублирую пока чтоб работало
+			msg.post("bar2#lifebar", "set_health", {health = player_health, max_health = max_health, player1 = false})
+
+		end
+	end
+	--атака от врага
+	if message_id == hash("simple_attack") and self.cooldown then
+		print("attackakka")
+		decrease_player_health(self)
 	end
 end
 

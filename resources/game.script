@@ -3,10 +3,18 @@ local pos2 = vmath.vector3(600, 130, 0)
 local pos_enemy = vmath.vector3(800, 80, 0)
 local pos_enemy2 = vmath.vector3(850, 80, 0)
 local pos3 = vmath.vector3(900, 80, 0)
-local death = hash("death")
 
 go.property("money", 500)
 go.property("score", 10)
+
+function update_menu()
+	label.set_text("platform#score", go.get("#", "score"))
+	label.set_text("platform#money", go.get("#", "money"))
+	--сообщения в меню
+	msg.post("main:/update_scills#update_scills", "message_update_scills", {money = go.get("#", "money")})
+	msg.post("main:/menu#menu", "message_score_menu", {score = go.get("#", "score")})
+		
+end
 
 function init(self)
 	msg.post("chests#chests", "create_chests", {pos_chests = pos_chests})
@@ -19,8 +27,23 @@ function init(self)
 	label.set_text("platform#money", self.money)
 	label.set_text("platform#score", self.score)
 	--msg.post("main:/game#game_proxy", "reset")
+
+	update_menu()
 end
 
-function on_message(self, message_id, message, sender)
 
+
+function on_message(self, message_id, message, sender)
+	
+	if message_id == hash("enemy_death") then
+		self.score = self.score + message.score
+		
+	end
+
+	if message_id == hash("scill_update_player") then
+		go.set("#", "money", message.money)
+
+	end
+	update_menu()
+	
 end

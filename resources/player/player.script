@@ -90,7 +90,8 @@ function init(self)
 	self.damage_enemy = nil
 
 	--сообщения в меню 
-	update_menu(self.damage_player)
+	msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.damage_player, speed = speed, shield = shield})
+		
 end
 
 local function play_animation(self, animation, func)
@@ -100,13 +101,7 @@ local function play_animation(self, animation, func)
 	end
 end
 
-function update_menu(damage)
-	label.set_text("platform#score", go.get("platform#game", "score"))
-	label.set_text("platform#money", go.get("platform#game", "money"))
-	--сообщения в меню
-	msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = damage, speed = speed, shield = shield})
-	msg.post("main:/update_scills#update_scills", "message_update_scills", {money = go.get("platform#game", "money")})
-end
+
 
 --ф-ии для карабканья вверх/вниз
 local function climb_up(self)
@@ -187,7 +182,7 @@ elseif self.input_state[hash("down")] then
 end]]--
 
 --шкала здоровья
-msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100, player1 = true})
 
 enemy_CONTACT = false --убрать и поставить кд на аьаки обычные
 
@@ -199,10 +194,13 @@ end
 if player_health <= 0 then
 	player_health = 0
 
+	msg.post("main:/pause#pause", "death_player1", {player1 = true})
+	play_animation(self, hash("death"), nil)
+	
 	--msg.post("main:/menu#menu", "game_reset")		
 end
 
-msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player1 = true})
 
 end
 
@@ -262,7 +260,7 @@ function on_message(self, message_id, message, sender)
 			player_health = player_health - 5
 			cooldown(self)
 			--дублирую пока чтоб работало
-			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player1 = true})
 				
 		end
 
@@ -311,13 +309,13 @@ function on_message(self, message_id, message, sender)
 		decrease_player_health(self)
 	end
 
-	--сообщение о смерти врага
+	--[[сообщение о смерти врага
 	if message_id == hash("enemy_death") then
 		--score = label.get_text("platform#score")
 		go.set("platform#game", "score", go.get("platform#game", "score") + message.score)
 
 		update_menu(self.damage_player)
-	end
+	end]]--
 
 	--обновление характеристик от меню
 	if message_id == hash("menu_update_player") then
@@ -330,14 +328,11 @@ function on_message(self, message_id, message, sender)
 		shield = message.shield
 		player_health = max_health
 		go.set("platform#game", "score", message.score)
-		update_menu(self.damage_player)
+		msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.damage_player, speed = speed, shield = shield})
+		
 	end
 
-	if message_id == hash("scill_update_player") then
-		go.set("platform#game", "money", message.money)
-		update_menu(self.damage_player)
 
-	end
 
 	--активируемый навык
 	if message_id == hash("scill1") and player_mana >= 20 and self.cooldown_activate_attack and enemy_CONTACT then
@@ -401,7 +396,7 @@ function on_message(self, message_id, message, sender)
 			end
 
 			--дублирую пока чтоб работало
-			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player1 = true})
 		end
 
 		--контакт с "деньгами"
@@ -430,7 +425,7 @@ function on_message(self, message_id, message, sender)
 			end
 
 			--дублирую пока чтоб работало
-			msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+			msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100, player1 = true})
 
 		end
 	end

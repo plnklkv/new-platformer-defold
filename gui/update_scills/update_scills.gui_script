@@ -93,7 +93,7 @@ function update_scill(scill, level)
 		
 		money = money - money_scill3
 	end
-	msg.post("default:/player#player", "scill_update_player", {money = money})
+	msg.post("default:/platform#game", "scill_update_player", {money = money})
 end
 
 function update(self, dt)
