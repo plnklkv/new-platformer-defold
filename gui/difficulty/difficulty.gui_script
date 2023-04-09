@@ -25,7 +25,7 @@ function game_proxy_load(difficulty, diff)
 
 		--урон игрока и врагов
 		msg.post("default:/player#player", "diff_attack", {attack_diff = diff})
-		print(enemy_sender)
+		--print(enemy_sender)
 		msg.post("default:/enemy", "attack_enemy", {attack_diff = diff})
 		
 		--msg.post("player#player", "shot_player", {shot_diff = })
@@ -37,8 +37,8 @@ end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("enemy_sender") then
-		print(332)
-		print(sender)
+		--print(332)
+		--print(sender)
 		enemy_sender = sender
 	end
 end

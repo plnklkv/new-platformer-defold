@@ -67,8 +67,8 @@ embedded_components {
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {
-    x: 0.0
-    y: 0.0
+    x: -2.0
+    y: -15.0
     z: 1.0
   }
   rotation {
@@ -97,8 +97,8 @@ embedded_components {
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
   "    position {\n"
-  "      x: 3.0\n"
-  "      y: -6.0\n"
+  "      x: 2.0\n"
+  "      y: -12.0\n"
   "      z: 0.0\n"
   "    }\n"
   "    rotation {\n"
@@ -110,8 +110,8 @@ embedded_components {
   "    index: 0\n"
   "    count: 3\n"
   "  }\n"
-  "  data: 15.605\n"
-  "  data: 8.0775\n"
+  "  data: 15.217\n"
+  "  data: 19.4535\n"
   "  data: 10.0\n"
   "}\n"
   "linear_damping: 0.0\n"

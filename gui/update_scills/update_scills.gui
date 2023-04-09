@@ -161,7 +161,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "resources/anim"
-  id: "button_scill1"
+  id: "button_skill1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -220,7 +220,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "update"
   font: "system_font"
-  id: "text_scill1"
+  id: "text_skill1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -238,7 +238,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "button_scill1"
+  parent: "button_skill1"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -285,7 +285,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "resources/anim"
-  id: "button_scill2"
+  id: "button_skill2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -344,7 +344,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "update"
   font: "system_font"
-  id: "text_scill2"
+  id: "text_skill2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -362,7 +362,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "button_scill2"
+  parent: "button_skill2"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -409,7 +409,7 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "resources/anim"
-  id: "button_scill3"
+  id: "button_skill3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -468,7 +468,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   text: "update"
   font: "system_font"
-  id: "text_scill3"
+  id: "text_skill3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -486,7 +486,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "button_scill3"
+  parent: "button_skill3"
   layer: ""
   inherit_alpha: true
   alpha: 1.0
@@ -532,9 +532,9 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "scill 1"
+  text: "skill 1"
   font: "system_font"
-  id: "scill1"
+  id: "skill1"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -597,9 +597,9 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "scill 2"
+  text: "skill 2"
   font: "system_font"
-  id: "scill2"
+  id: "skill2"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
@@ -662,9 +662,9 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "scill 3"
+  text: "skill 3"
   font: "system_font"
-  id: "scill3"
+  id: "skill3"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER

@@ -5,9 +5,10 @@ go.property("speed", 50)
 
 local GROUP_player = hash("player")
 
+local GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
+
 
 function init(self)
-	self.GROUP_obstacle_for_enemy = hash("obstacle_for_enemy")
 	self.obstacle_for_enemy_CONTACT = false
 
 	--self.speed = 50
@@ -78,20 +79,30 @@ function on_message(self, message_id, message, sender)
 	end
 		
 	--столкновение врага с препятсвием
-	if message.group == self.GROUP_obstacle_for_enemy then
+	if message.other_group == GROUP_obstacle_for_enemy then
+		
 		if self.obstacle_for_enemy_CONTACT then
 			self.obstacle_for_enemy_CONTACT = false
 			self.speed = -self.speed
+			if self.speed < 0 then
+				sprite.set_hflip("#sprite", true)
+			else
+				sprite.set_hflip("#sprite", false)
+			end
+			
 		else
 			self.obstacle_for_enemy_CONTACT = true
 		end
+		--sprite.play_flipbook("#sprite", "")			
+		
 	end
 		
 		if message.group == GROUP_player then
 			--остановка перед атакой перед игроком
 			self.player_attack = true
-			------------------------------------self.speed = 0
-			
+			--self.speed = 0
+
+			--sprite.play_flipbook("#sprite", "")			
 			decrease_player_health(self, message.other_id)
 			print(message.other_id)
 		

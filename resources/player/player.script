@@ -1,8 +1,8 @@
 go.property("damage_player", 30)
 --go.property("shot_player", 60)
+local right = true
 local speed = 150
-local money = 1000
-local score = 0
+
 local shield = 0
 
 local platypus = require "platypus.platypus"
@@ -93,12 +93,19 @@ function init(self)
 	update_menu(self.damage_player)
 end
 
+local function play_animation(self, animation, func)
+	if self.current_animation ~= animation then
+		self.current_animation = animation
+		sprite.play_flipbook("#sprite", animation, func)
+	end
+end
+
 function update_menu(damage)
-	label.set_text("platform#score", score)
-	label.set_text("platform#money", money)
+	label.set_text("platform#score", go.get("platform#game", "score"))
+	label.set_text("platform#money", go.get("platform#game", "money"))
 	--сообщения в меню
-	msg.post("main:/menu#menu", "message_menu", {score = score, money = money, max_health = max_health, damage = damage, speed = speed, shield = shield})
-	msg.post("main:/update_scills#update_scills", "message_update_scills", {money = money})
+	msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = damage, speed = speed, shield = shield})
+	msg.post("main:/update_scills#update_scills", "message_update_scills", {money = go.get("platform#game", "money")})
 end
 
 --ф-ии для карабканья вверх/вниз
@@ -200,316 +207,317 @@ msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_
 end
 
 function on_message(self, message_id, message, sender)
-self.platypus.on_message(message_id, message)
-if message_id == contact_point_response then
-	--
-	if message.group == hash("platform") then
-		print("pos platf == ", message.other_position)
-	end
-	
-end
---[[if message_id == platypus.GROUND_CONTACT then
-	print("Phew! Solid ground == ", go.get_position())
-	self.platypus.gravity = 0
-else
-	self.platypus.gravity = -500
-end]]-- 
+	self.platypus.on_message(message_id, message) 
 
---сложность
-if message_id == hash("diff_attack") then
-	self.damage_player = self.damage_player/message.attack_diff
-	--сделать норм мб отдельный скрипт
-	--self.shot_player = self.shot_player/message.attack_diff
-end
-
-if message_id == hash("trigger_response") then
-	--контакт с костром
-	if message.group == hash("bonfire") then
-		if message.enter then
-			bonfire_contact = true
-		else
-			bonfire_contact = false
-		end
-	end	
-
-	--контакт с лестницей
-	if message.other_group == hash("ladder") then
-		if message.enter then
-			self.ladder = true
-		else
-			self.platypus.gravity = -500
-			self.ladder = false
-			--self.climbing = false
-		end
+	--сложность
+	if message_id == hash("diff_attack") then
+		self.damage_player = self.damage_player/message.attack_diff
+		--сделать норм мб отдельный скрипт
+		--self.shot_player = self.shot_player/message.attack_diff
 	end
 
-	--контакт с врагом
-	if message.group == GROUP_enemy then
-		if message.enter then
-			enemy_CONTACT = true
-			--
-			msg_id = message.other_id
-
-			--для 3 навыка
-			if scill3 and splash and attack_shield then
-				decrease_enemy_health(self, msg_id, 20)
-				print("третий скил удар")
+	if message_id == hash("trigger_response") then
+		--контакт с костром
+		if message.group == hash("bonfire") then
+			if message.enter then
+				bonfire_contact = true
+			else
+				bonfire_contact = false
 			end
-		else
-			enemy_CONTACT = false
+		end	
+
+		--контакт с лестницей
+		if message.other_group == hash("ladder") then
+			if message.enter then
+				self.ladder = true
+			else
+				self.platypus.gravity = -500
+				self.ladder = false
+				--self.climbing = false
+			end
 		end
 
+		--контакт с врагом
+		if message.group == GROUP_enemy then
+			if message.enter then
+				enemy_CONTACT = true
+				--
+				msg_id = message.other_id
 
-	end
+				--для 3 навыка
+				if scill3 and splash and attack_shield then
+					decrease_enemy_health(self, msg_id, 20)
+					print("третий скил удар")
+				end
+			else
+				enemy_CONTACT = false
+			end
 
-	--контакт с шипами
-	if message.group == GROUP_spikes and self.cooldown then
-		
-		player_health = player_health - 5
-		cooldown(self)
-		--дублирую пока чтоб работало
-		msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+
+		end
+
+		--контакт с шипами
+		if message.group == GROUP_spikes and self.cooldown then
 			
-	end
+			player_health = player_health - 5
+			cooldown(self)
+			--дублирую пока чтоб работало
+			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+				
+		end
 
-	--контакт с кнопкой для открытия двери
-	if message.group == hash("button") then
-		if message.enter then
-			button_contact = true
-		else
-			button_contact = false
+		--контакт с кнопкой для открытия двери
+		if message.group == hash("button") then
+			if message.enter then
+				button_contact = true
+			else
+				button_contact = false
+			end
+		end
+
+		--контакт с дверью
+		if message.group == hash("door") then
+			if open_door then
+				print("дверь открыта")
+				msg.post("main:/menu#menu", "open_level2")
+			else
+				print("дверь закрыта")
+			end
+		end
+
+		--контакт с вещами
+		if message.group == hash("outfit1") then
+			print("шлем взят")
+			msg.post("main:/menu#menu", "add_outfit", {type = "outfit1"})
+			go.delete(id_outfit1)
+
+			--
+			shield = shield + 5
+
+		end
+
+		if message.group == hash("outfit3") then
+			print("сапоги взяты")
+			msg.post("main:/menu#menu", "add_outfit", {type = "outfit3"})
+			go.delete(id_outfit3)
+
+			--увеличение скорости
+			speed = speed + 50
 		end
 	end
 
-	--контакт с дверью
-	if message.group == hash("door") then
-		if open_door then
-			print("дверь открыта")
-			msg.post("main:/menu#menu", "open_level2")
-		else
-			print("дверь закрыта")
+	--атака от врага
+	if message_id == msg_simple_attack and attack_shield == false and self.cooldown then
+		decrease_player_health(self)
+	end
+
+	--сообщение о смерти врага
+	if message_id == hash("enemy_death") then
+		--score = label.get_text("platform#score")
+		go.set("platform#game", "score", go.get("platform#game", "score") + message.score)
+
+		update_menu(self.damage_player)
+	end
+
+	--обновление характеристик от меню
+	if message_id == hash("menu_update_player") then
+		print("menu update message")
+		max_health = message.max_health
+		self.damage_player = message.damage_player
+		--go.set("#", "damage_player", message.damage_player)
+		print(self.damage_player)
+		speed = message.speed
+		shield = message.shield
+		player_health = max_health
+		go.set("platform#game", "score", message.score)
+		update_menu(self.damage_player)
+	end
+
+	if message_id == hash("scill_update_player") then
+		go.set("platform#game", "money", message.money)
+		update_menu(self.damage_player)
+
+	end
+
+	--активируемый навык
+	if message_id == hash("scill1") and player_mana >= 20 and self.cooldown_activate_attack and enemy_CONTACT then
+		print("активируемый навык")
+		cooldown_activate_attack(self)
+		decrease_enemy_health(self, msg_id, self.damage_player*damage_scill1)
+		--print("ataka = *", damage_scill1, " kd = ", cooldown_scill1)
+		player_mana = player_mana - 20 
+	end
+	--второй активируемый навык: метание меча
+	if message_id == hash("scill2") and player_mana >= 20 and self.cooldown_scill2 then
+		local id = factory.create("weapon#factory_weapon")
+		msg.post(id, "create_weapon", {right = right})
+		cooldown_scill2(self, go.get("weapon#weapon", "cooldown"))
+		--player_mana = player_mana - 20 
+
+	end
+	--третий актив навык: рывок
+	if message_id == hash("scill3") and scill3 == false and player_mana >= 20 then
+
+		attack_shield = true
+		scill3 = true
+
+		local pos = go.get_position()
+
+		go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x + meter, go.EASING_LINEAR, 0.3, 0, function()
+			attack_shield = false
+		end)
+
+		timer.delay(cooldown_scill3, false, function()
+			scill3 = false
+		end)
+
+		--player_mana = player_mana - 20 
+
+	end
+
+	--обновление первого навыка
+	if message_id == hash("update_level_scill1") then
+		damage_scill1 = message.damage
+		cooldown_scill1 = message.cooldown
+	end
+
+	--обновление третьего навыка
+	if message_id == hash("update_level_scill3") then
+		meter = message.meter
+		cooldown_scill3 = message.cooldown
+		splash = message.splash
+	end
+
+	--сообщ для получения лута
+	if message_id == hash("loot_contact") then
+		--контакт с лутом ом ом :)
+		--контакт со "здоровьем"
+		if message.collision == hash("collision_health") then
+			player_health = player_health + 10
+
+			--тоже уберу потом (дублирую пока)
+			if player_health > 100 then
+				player_health = 100
+			end
+
+			--дублирую пока чтоб работало
+			msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
+		end
+
+		--контакт с "деньгами"
+		if message.collision == hash("collision_money") then
+			print("plus money ")
+
+			go.set("platform#game", "money", go.get("platform#game", "money") + 100)
+			
+			label.set_text("platform#money", go.get("platform#game", "money"))
+
+			--сообщ в меню для денег
+			--msg.post("main:/menu#menu", "money_menu", {money = money})
+
+			--цupdate_menu(self.damage_player)
+		end
+
+		--контакт с "маной"
+		if  message.collision == hash("collision_mana") then
+			print("plus mana ")
+
+			player_mana = player_mana + 10
+
+			--тоже уберу потом (дублирую пока)
+			if player_mana > 100 then
+				player_mana = 100
+			end
+
+			--дублирую пока чтоб работало
+			msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
+
 		end
 	end
 
-	--контакт с вещами
-	if message.group == hash("outfit1") then
-		print("шлем взят")
-		msg.post("main:/menu#menu", "add_outfit", {type = "outfit1"})
-		go.delete(id_outfit1)
-
-		--
-
+	--получения экз вещей для удаления
+	if message_id == hash("id_sender1") then
+		id_outfit1 = message.id_outfit1
 	end
 
-	if message.group == hash("outfit3") then
-		print("сапоги взяты")
-		msg.post("main:/menu#menu", "add_outfit", {type = "outfit3"})
-		go.delete(id_outfit3)
-
-		--увеличение скорости
-		speed = speed + 50
+	if message_id == hash("id_sender3") then
+		id_outfit3 = message.id_outfit3
 	end
-end
-
---атака от врага
-if message_id == msg_simple_attack and attack_shield == false and self.cooldown then
-	decrease_player_health(self)
-end
-
---сообщение о смерти врага
-if message_id == hash("enemy_death") then
-	--score = label.get_text("platform#score")
-	score = score + message.score
-
-	update_menu(self.damage_player)
-end
-
---обновление характеристик от меню
-if message_id == hash("menu_update_player") then
-	print("menu update message")
-	max_health = message.max_health
-	self.damage_player = message.damage_player
-	--go.set("#", "damage_player", message.damage_player)
-	print(self.damage_player)
-	speed = message.speed
-	shield = message.shield
-	player_health = max_health
-	score = message.score
-	update_menu(self.damage_player)
-end
-
-if message_id == hash("scill_update_player") then
-	money = message.money
-	update_menu(self.damage_player)
-
-end
-
---активируемый навык
-if message_id == hash("scill1") and player_mana >= 20 and self.cooldown_activate_attack and enemy_CONTACT then
-	print("активируемый навык")
-	cooldown_activate_attack(self)
-	decrease_enemy_health(self, msg_id, self.damage_player*damage_scill1)
-	--print("ataka = *", damage_scill1, " kd = ", cooldown_scill1)
-	player_mana = player_mana - 20 
-end
---второй активируемый навык: метание меча
-if message_id == hash("scill2") and player_mana >= 20 and self.cooldown_scill2 then
-	factory.create("weapon#factory_weapon")
-	--msg.post("weapon#weapon", "create_weapon")
-	cooldown_scill2(self, go.get("weapon#weapon", "cooldown"))
-	--player_mana = player_mana - 20 
-
-end
---третий актив навык: телепорт
-if message_id == hash("scill3") and scill3 == false and player_mana >= 20 then
-
-	attack_shield = true
-	scill3 = true
-
-	local pos = go.get_position()
-
-	go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x + meter, go.EASING_LINEAR, 0.3, 0, function()
-		attack_shield = false
-	end)
-
-	timer.delay(cooldown_scill3, false, function()
-		scill3 = false
-	end)
-
-	--player_mana = player_mana - 20 
-
-end
-
---обновление первого навыка
-if message_id == hash("update_level_scill1") then
-	damage_scill1 = message.damage
-	cooldown_scill1 = message.cooldown
-end
-
---обновление третьего навыка
-if message_id == hash("update_level_scill3") then
-	meter = message.meter
-	cooldown_scill3 = message.cooldown
-	splash = message.splash
-end
-
---сообщ для получения лута
-if message_id == hash("loot_contact") then
-	--контакт с лутом ом ом :)
-	--контакт со "здоровьем"
-	if message.collision == hash("collision_health") then
-		player_health = player_health + 10
-
-		--тоже уберу потом (дублирую пока)
-		if player_health > 100 then
-			player_health = 100
-		end
-
-		--дублирую пока чтоб работало
-		msg.post("bar#lifebar", "set_health", {health = player_health, max_health = max_health, player = true})
-	end
-
-	--контакт с "деньгами"
-	if message.collision == hash("collision_money") then
-		print("plus money ")
-
-		money = money + 100
-		label.set_text("platform#money", money)
-
-		--сообщ в меню для денег
-		--msg.post("main:/menu#menu", "money_menu", {money = money})
-
-		--цupdate_menu(self.damage_player)
-	end
-
-	--контакт с "маной"
-	if  message.collision == hash("collision_mana") then
-		print("plus mana ")
-
-		player_mana = player_mana + 10
-
-		--тоже уберу потом (дублирую пока)
-		if player_mana > 100 then
-			player_mana = 100
-		end
-
-		--дублирую пока чтоб работало
-		msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100})
-
-	end
-end
-
---получения экз вещей для удаления
-if message_id == hash("id_sender1") then
-	id_outfit1 = message.id_outfit1
-end
-
-if message_id == hash("id_sender3") then
-	id_outfit3 = message.id_outfit3
-end
 end
 
 function on_input(self, action_id, action)
-if action_id == hash("left") then
-	self.platypus.left(speed)
-	sprite.set_hflip("#sprite", true)
+	if action_id == hash("left") then
+		right = false
+		play_animation(self, hash("run"), nil)
+			
+		self.platypus.left(speed)
+		sprite.set_hflip("#sprite", true)
 
 
-elseif action_id == hash("right") then
-	self.platypus.right(speed)
-	sprite.set_hflip("#sprite", false)
+	elseif action_id == hash("right") then
+		right = true
+		play_animation(self, hash("run"), nil)
+		
+		self.platypus.right(speed)
+		sprite.set_hflip("#sprite", false)
 
-end
-
-if action_id == hash("jump") then
-	if action.pressed then
-		self.platypus.jump(speed*2.5)
-	elseif action.released then
-		self.platypus.abort_jump(0.5)
 	end
-end
 
---карабканье
-if action_id == hash("up") and self.ladder then
-	climb_up(self)
-elseif action_id == hash("down") and self.ladder and not ground_contact then
-	climb_down(self)
-end
-
---открытие меню
-if action_id == input_interactive and bonfire_contact then
-	--сообщ для открытия меню
-	msg.post("main:/menu#menu", "open_menu")
-end
-
---атака
-if action_id == input_attack and enemy_CONTACT and not attack_shield then
-	decrease_enemy_health(self, msg_id, self.damage_player)
-	--[[enemy_CONTACT = false
-	timer.delay(15, false, function()
-		enemy_CONTACT = true
-	end)]]--
-end
-
-
-
---защита
-if action_id == hash("shield") then
-	if action.pressed then
-		attack_shield = true
-	elseif action.released then
-		attack_shield = false
+	if action_id == hash("jump") then
+		if action.pressed then
+			self.platypus.jump(speed*2.5)
+		elseif action.released then
+			self.platypus.abort_jump(0.5)
+		end
 	end
-end
 
---открытие сундука, ...
-if action_id == input_interactive and action.pressed then
-	msg.post("chests#chests", "open_chests")
-end
+	--карабканье
+	if action_id == hash("up") and self.ladder then
+		climb_up(self)
+	elseif action_id == hash("down") and self.ladder and not ground_contact then
+		climb_down(self)
+	end
 
---открытие двери
-if action_id == input_interactive and button_contact and not open_door then
-	print("открытие двери...")
-	open_door = true
-end
+	--открытие меню
+	if action_id == input_interactive and bonfire_contact then
+		--сообщ для открытия меню
+		msg.post("main:/menu#menu", "open_menu")
+	end
+
+	--атака
+	if action_id == input_attack and not attack_shield then
+		play_animation(self, hash("attack"), nil, function()
+			if enemy_CONTACT then
+				decrease_enemy_health(self, msg_id, self.damage_player)
+			end
+		end)
+		
+		--[[enemy_CONTACT = false
+		timer.delay(15, false, function()
+			enemy_CONTACT = true
+		end)]]--
+	end
+
+
+
+	--защита
+	if action_id == hash("shield") then
+		if action.pressed then
+			attack_shield = true
+		elseif action.released then
+			attack_shield = false
+		end
+	end
+
+	--открытие сундука, ...
+	if action_id == input_interactive and action.pressed then
+		msg.post("chests#chests", "open_chests")
+	end
+
+	--открытие двери
+	if action_id == input_interactive and button_contact and not open_door then
+		print("открытие двери...")
+		open_door = true
+	end
+
 end

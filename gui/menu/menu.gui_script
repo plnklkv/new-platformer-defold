@@ -151,7 +151,6 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("message_menu") then 
 		score = message.score
 		gui.set_text(gui.get_node("score"), "score: " .. score)
-		gui.set_text(gui.get_node("money"), "money: " .. message.money)
 
 		max_health = message.max_health
 		damage_player = message.damage

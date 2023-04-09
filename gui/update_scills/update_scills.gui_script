@@ -47,9 +47,9 @@ function init(self)
 	msg.post(".", "disable")
 
 	button_close2 = gui.get_node("close2")
-	button_scill1 = gui.get_node("button_scill1")
-	button_scill2 = gui.get_node("button_scill2")
-	button_scill3 = gui.get_node("button_scill3")
+	button_scill1 = gui.get_node("button_skill1")
+	button_scill2 = gui.get_node("button_skill2")
+	button_scill3 = gui.get_node("button_skill3")
 
 	--update_transparent2()
 end
@@ -116,14 +116,14 @@ function on_message(self, message_id, message, sender)
 		gui.set_text(gui.get_node("money"), "money: " .. money)
 
 
-		message_update2(level1, 3, "scill1")
-		message_update2(level2, 3, "scill2")
-		message_update2(level3, 3, "scill3")
+		message_update2(level1, 3, "skill1")
+		message_update2(level2, 3, "skill2")
+		message_update2(level3, 3, "skill3")
 		
 
-		gui.set_text(gui.get_node("text_scill1"), "update for " .. money_scill1)
-		gui.set_text(gui.get_node("text_scill2"), "update for " .. money_scill2)
-		gui.set_text(gui.get_node("text_scill3"), "update for " .. money_scill3)
+		gui.set_text(gui.get_node("text_skill1"), "update for " .. money_scill1)
+		gui.set_text(gui.get_node("text_skill2"), "update for " .. money_scill2)
+		gui.set_text(gui.get_node("text_skill3"), "update for " .. money_scill3)
 	end
 end
 

@@ -1,9 +1,9 @@
-image: "/resources/enemy/Attack (34x28).png"
-tile_width: 34
-tile_height: 28
+image: "/resources/enemy/noBKG_KnightRun_strip.png"
+tile_width: 96
+tile_height: 61
 tile_margin: 0
 tile_spacing: 0
-collision: "/resources/enemy/Attack (34x28).png"
+collision: "/resources/enemy/noBKG_KnightRun_strip.png"
 material_tag: "tile"
 convex_hulls {
   index: 0
@@ -12,21 +12,36 @@ convex_hulls {
 }
 convex_hulls {
   index: 10
+  count: 9
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 19
+  count: 11
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 30
+  count: 10
+  collision_group: "enemy"
+}
+convex_hulls {
+  index: 40
   count: 12
   collision_group: "enemy"
 }
 convex_hulls {
-  index: 22
-  count: 13
+  index: 52
+  count: 9
   collision_group: "enemy"
 }
 convex_hulls {
-  index: 35
-  count: 14
+  index: 61
+  count: 9
   collision_group: "enemy"
 }
 convex_hulls {
-  index: 49
+  index: 70
   count: 11
   collision_group: "enemy"
 }
@@ -34,9 +49,9 @@ collision_groups: "enemy"
 animations {
   id: "run"
   start_tile: 1
-  end_tile: 5
-  playback: PLAYBACK_ONCE_FORWARD
-  fps: 12
+  end_tile: 8
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 4
   flip_horizontal: 0
   flip_vertical: 0
 }

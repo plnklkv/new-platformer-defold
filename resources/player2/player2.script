@@ -73,7 +73,8 @@ end
 
 function update(self, dt)
 	self.platypus.update(dt)
-
+	
+	
 	--стоит ли игрок на земле
 	local ground_contact = self.platypus.has_ground_contact()
 	
@@ -81,6 +82,7 @@ function update(self, dt)
 		self.platypus.left(speed)
 		right = false
 		--sprite.play_flipbook("#sprite", hash("run"))
+	
 		play_animation(self, hash("run"), nil)
 		sprite.set_hflip("#sprite", true)
 
@@ -143,6 +145,9 @@ function on_input(self, action_id, action)
 		elseif action.released then
 			self.actions[action_id] = false
 		end
+	else
+		play_animation(self, hash("anim"), nil)
+		
 	end
 
 	if action_id == hash("shot") and action.released then

@@ -39,10 +39,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/gui/scill/weapon.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/resources/platform/ladder.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
@@ -84,6 +80,10 @@ images {
 }
 images {
   image: "/resources/level2/background_0.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/gui/scill/scill2/weapons.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 animations {

@@ -17,7 +17,7 @@ embedded_components {
   id: "weapon"
   type: "sprite"
   data: "tile_set: \"/resources/resources.atlas\"\n"
-  "default_animation: \"weapon\"\n"
+  "default_animation: \"weapons\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
@@ -29,8 +29,8 @@ embedded_components {
   rotation {
     x: 0.0
     y: 0.0
-    z: -0.9258807
-    w: 0.37781608
+    z: -1.0
+    w: 6.123234E-17
   }
 }
 embedded_components {

@@ -1,14 +1,79 @@
-image: "/resources/player/walk_2.png"
+image: "/resources/player/MergeResult_2023_04_07_03_56_00.png"
 tile_width: 50
-tile_height: 48
+tile_height: 65
 tile_margin: 0
 tile_spacing: 0
-collision: "/resources/player/walk_2.png"
+collision: "/resources/player/MergeResult_2023_04_07_03_56_00.png"
 material_tag: "tile"
 convex_hulls {
   index: 0
   count: 10
   collision_group: "player"
+}
+convex_hulls {
+  index: 10
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 10
+  count: 8
+  collision_group: ""
+}
+convex_hulls {
+  index: 18
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 18
+  count: 8
+  collision_group: ""
+}
+convex_hulls {
+  index: 26
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 26
+  count: 9
+  collision_group: ""
+}
+convex_hulls {
+  index: 35
+  count: 11
+  collision_group: ""
+}
+convex_hulls {
+  index: 46
+  count: 8
+  collision_group: ""
+}
+convex_hulls {
+  index: 54
+  count: 13
+  collision_group: ""
+}
+convex_hulls {
+  index: 67
+  count: 12
+  collision_group: ""
+}
+convex_hulls {
+  index: 79
+  count: 10
+  collision_group: ""
+}
+convex_hulls {
+  index: 89
+  count: 10
+  collision_group: ""
+}
+convex_hulls {
+  index: 99
+  count: 10
+  collision_group: ""
 }
 collision_groups: "player"
 animations {
