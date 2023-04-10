@@ -3,6 +3,8 @@ local PAUSE = hash("pause")
 local player1 = false
 local player2 = false
 
+local level = 1
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("game#game_proxy", "load")
@@ -31,6 +33,8 @@ function on_message(self, message_id, message, sender)
 			msg.post("@system:", "reboot")
 		end)
 	end
+
+	
 end
 
 function on_input(self, action_id, action)

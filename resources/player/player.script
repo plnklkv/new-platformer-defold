@@ -69,7 +69,7 @@ function init(self)
 				[hash("obstacle_for_enemy")] = platypus.DIR_ALL,
 
 			},
-			left = 9, right = 9, top = 14, bottom = 14, offset = vmath.vector3(0, -3, 0)
+			left = 9, right = 9, top = 14, bottom = 16, offset = vmath.vector3(0, -3, 0)
 		},
 		debug = false,
 		gravity = -500,
@@ -196,7 +196,7 @@ if player_health <= 0 then
 
 	msg.post("main:/pause#pause", "death_player1", {player1 = true})
 	play_animation(self, hash("death"), nil)
-	
+	speed = 0
 	--msg.post("main:/menu#menu", "game_reset")		
 end
 
@@ -277,7 +277,7 @@ function on_message(self, message_id, message, sender)
 		if message.group == hash("door") then
 			if open_door then
 				print("дверь открыта")
-				msg.post("main:/menu#menu", "open_level2")
+				msg.post("main:/menu#menu", "open_level")
 			else
 				print("дверь закрыта")
 			end
@@ -333,43 +333,43 @@ function on_message(self, message_id, message, sender)
 	end
 
 
+	if player_health > 0 then
+		--активируемый навык
+		if message_id == hash("scill1") and player_mana >= 20 and self.cooldown_activate_attack and enemy_CONTACT then
+			print("активируемый навык")
+			cooldown_activate_attack(self)
+			decrease_enemy_health(self, msg_id, self.damage_player*damage_scill1)
+			--print("ataka = *", damage_scill1, " kd = ", cooldown_scill1)
+			player_mana = player_mana - 20 
+		end
+		--второй активируемый навык: метание меча
+		if message_id == hash("scill2") and player_mana >= 20 and self.cooldown_scill2 then
+			local id = factory.create("weapon#factory_weapon")
+			msg.post(id, "create_weapon", {right = right})
+			cooldown_scill2(self, go.get("weapon#weapon", "cooldown"))
+			--player_mana = player_mana - 20 
 
-	--активируемый навык
-	if message_id == hash("scill1") and player_mana >= 20 and self.cooldown_activate_attack and enemy_CONTACT then
-		print("активируемый навык")
-		cooldown_activate_attack(self)
-		decrease_enemy_health(self, msg_id, self.damage_player*damage_scill1)
-		--print("ataka = *", damage_scill1, " kd = ", cooldown_scill1)
-		player_mana = player_mana - 20 
+		end
+		--третий актив навык: рывок
+		if message_id == hash("scill3") and scill3 == false and player_mana >= 20 then
+
+			attack_shield = true
+			scill3 = true
+
+			local pos = go.get_position()
+
+			go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x + meter, go.EASING_LINEAR, 0.3, 0, function()
+				attack_shield = false
+			end)
+
+			timer.delay(cooldown_scill3, false, function()
+				scill3 = false
+			end)
+
+			--player_mana = player_mana - 20 
+
+		end
 	end
-	--второй активируемый навык: метание меча
-	if message_id == hash("scill2") and player_mana >= 20 and self.cooldown_scill2 then
-		local id = factory.create("weapon#factory_weapon")
-		msg.post(id, "create_weapon", {right = right})
-		cooldown_scill2(self, go.get("weapon#weapon", "cooldown"))
-		--player_mana = player_mana - 20 
-
-	end
-	--третий актив навык: рывок
-	if message_id == hash("scill3") and scill3 == false and player_mana >= 20 then
-
-		attack_shield = true
-		scill3 = true
-
-		local pos = go.get_position()
-
-		go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x + meter, go.EASING_LINEAR, 0.3, 0, function()
-			attack_shield = false
-		end)
-
-		timer.delay(cooldown_scill3, false, function()
-			scill3 = false
-		end)
-
-		--player_mana = player_mana - 20 
-
-	end
-
 	--обновление первого навыка
 	if message_id == hash("update_level_scill1") then
 		damage_scill1 = message.damage

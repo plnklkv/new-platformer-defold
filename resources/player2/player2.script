@@ -105,7 +105,7 @@ function update(self, dt)
 
 		msg.post("main:/pause#pause", "death_player2", {player2 = true})
 		play_animation(self, hash("death"), nil)
-		
+		speed = 0
 	else
 		--стоит ли игрок на земле
 		local ground_contact = self.platypus.has_ground_contact()
