@@ -38,7 +38,7 @@ function on_message(self, message_id, message, sender)
 		max_mana = message.max_mana
 		mana = message.mana
 
-		local scale = go.get_scale("manabar_background2")
+		local scale = go.get_scale("manabar_background1")
 		--если достигнут макс уровень
 		if mana > max_mana then
 			scale.x = max_mana
@@ -48,6 +48,6 @@ function on_message(self, message_id, message, sender)
 		else
 			scale.x = (mana/max_mana) + 0.001
 		end
-		go.set_scale(scale, "manabar_progress2")
+		go.set_scale(scale, "manabar_progress1")
 	end
 end

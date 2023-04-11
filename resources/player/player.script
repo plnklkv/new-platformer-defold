@@ -347,7 +347,7 @@ function on_message(self, message_id, message, sender)
 			local id = factory.create("weapon#factory_weapon")
 			msg.post(id, "create_weapon", {right = right})
 			cooldown_scill2(self, go.get("weapon#weapon", "cooldown"))
-			--player_mana = player_mana - 20 
+			player_mana = player_mana - 20 
 
 		end
 		--третий актив навык: рывок
@@ -366,7 +366,7 @@ function on_message(self, message_id, message, sender)
 				scill3 = false
 			end)
 
-			--player_mana = player_mana - 20 
+			player_mana = player_mana - 20 
 
 		end
 	end

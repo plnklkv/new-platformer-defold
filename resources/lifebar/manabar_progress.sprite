@@ -1,0 +1,4 @@
+tile_set: "/resources/resources.atlas"
+default_animation: "manabar_progress"
+material: "/builtins/materials/sprite.material"
+blend_mode: BLEND_MODE_ALPHA
