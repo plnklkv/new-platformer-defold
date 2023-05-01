@@ -24,7 +24,7 @@ animations {
     image: "/resources/player/images/walk_6.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
-  playback: PLAYBACK_ONCE_FORWARD
+  playback: PLAYBACK_LOOP_FORWARD
   fps: 4
   flip_horizontal: 0
   flip_vertical: 0
@@ -55,7 +55,7 @@ animations {
     image: "/resources/player/images/attack1_6.png"
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
-  playback: PLAYBACK_LOOP_FORWARD
+  playback: PLAYBACK_ONCE_FORWARD
   fps: 4
   flip_horizontal: 0
   flip_vertical: 0
@@ -67,7 +67,7 @@ animations {
     sprite_trim_mode: SPRITE_TRIM_MODE_OFF
   }
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 60
+  fps: 6
   flip_horizontal: 0
   flip_vertical: 0
 }

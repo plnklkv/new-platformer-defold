@@ -27,9 +27,9 @@ end
 --атака на игрока
 function decrease_player_health(self, player)
 	if player == hash("/player") then
-		msg.post("player#player", "simple_attack")
+		msg.post("player#player", "simple_attack", {damage = self.damage_enemy})
 	elseif player == hash("/player2") then
-		msg.post("player2#player2", "simple_attack")
+		msg.post("player2#player2", "simple_attack", {damage = self.damage_enemy})
 	end
 	--print(self.damage_enemy)
 end
@@ -97,16 +97,22 @@ function on_message(self, message_id, message, sender)
 		
 	end
 		
-		if message.group == GROUP_player then
-			--остановка перед атакой перед игроком
-			self.player_attack = true
-			--self.speed = 0
+	if message.group == GROUP_player then
+		--остановка перед атакой перед игроком
+		self.player_attack = true
+		--self.speed = 0
 
-			--sprite.play_flipbook("#sprite", "")			
-			decrease_player_health(self, message.other_id)
+		--sprite.play_flipbook("#sprite", "")			
+		decrease_player_health(self, message.other_id)
+
+		--[[if message.group == hash("enemy") then
+		self.player_attack = true
+
+	end]]--
 		
-		end
+	end
 	
+		
 	--атака от игрока
 	if message_id == self.msg_simple_attack then
 		decrease_enemy_health(self, message.damage_player)

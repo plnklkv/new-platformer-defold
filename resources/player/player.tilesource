@@ -80,8 +80,8 @@ animations {
   id: "run"
   start_tile: 1
   end_tile: 1
-  playback: PLAYBACK_ONCE_FORWARD
-  fps: 12
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 6
   flip_horizontal: 0
   flip_vertical: 0
 }

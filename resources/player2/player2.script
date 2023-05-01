@@ -89,10 +89,10 @@ local function climb_down(self)
 end
 
 --уменьшение здоровья игрока
-local function decrease_player_health(self)
+local function decrease_player_health(self, damage)
 	--сделать потом чтоб останавливаться
 	--self.damage_enemy = go.get(msg_id, "damage_enemy")
-	player_health = player_health - (50 - shield)
+	player_health = player_health - (damage - shield)
 	cooldown(self)
 	--game over lol
 end
@@ -158,6 +158,8 @@ function update(self, dt)
 
 		msg.post("bar2#lifebar", "set_health", {health = player_health, max_health = max_health, player1 = false})
 	end
+
+	
 end
 
 function on_message(self, message_id, message, sender)
@@ -189,7 +191,7 @@ function on_message(self, message_id, message, sender)
 	--атака от врага
 	if message_id == hash("simple_attack") and self.cooldown then
 		print("attackakka")
-		decrease_player_health(self)
+		decrease_player_health(self, message.damage)
 	end
 end
 
@@ -202,7 +204,6 @@ function on_input(self, action_id, action)
 		end
 	else
 		play_animation(self, hash("anim"), nil)
-		
 	end
 
 	if action_id == hash("shot") and action.released then
