@@ -47,7 +47,7 @@ key_trigger {
   action: "right2"
 }
 key_trigger {
-  input: KEY_RSHIFT
+  input: KEY_M
   action: "jump2"
 }
 key_trigger {
@@ -72,11 +72,15 @@ key_trigger {
 }
 key_trigger {
   input: KEY_SEMICOLON
-  action: "select_scill"
+  action: "change_scill2"
 }
 key_trigger {
   input: KEY_P
   action: "interactive2"
+}
+key_trigger {
+  input: KEY_K
+  action: "scill2"
 }
 mouse_trigger {
   input: MOUSE_BUTTON_1

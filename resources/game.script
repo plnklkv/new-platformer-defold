@@ -5,7 +5,7 @@ local pos_enemy2 = vmath.vector3(850, 80, 0)
 local pos3 = vmath.vector3(900, 80, 0)
 
 go.property("money", 500)
-go.property("score", 10)
+go.property("score", 1000)
 
 function update_menu()
 	label.set_text("platform#score", go.get("#", "score"))

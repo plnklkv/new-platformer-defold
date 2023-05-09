@@ -1,8 +1,6 @@
 go.property("damage_player", 30)
---go.property("shot_player", 60)
 local right = true
 local speed = 150
-
 local shield = 0
 
 local platypus = require "platypus.platypus"
@@ -172,6 +170,8 @@ end
 function update(self, dt)
 	self.platypus.update(dt)
 
+	msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100, player1 = true})
+	
 	if player_health <= 0 then
 		player_health = 0
 
@@ -411,6 +411,7 @@ function on_message(self, message_id, message, sender)
 
 		end
 	end
+	
 	--обновление первого навыка
 	if message_id == hash("update_level_scill1") then
 		damage_scill1 = message.damage
@@ -465,9 +466,6 @@ function on_message(self, message_id, message, sender)
 				player_mana = 100
 			end
 
-			--дублирую пока чтоб работало
-			msg.post("bar#lifebar", "set_mana", {mana = player_mana, max_mana = 100, player1 = true})
-
 		end
 	end
 
@@ -480,8 +478,6 @@ function on_message(self, message_id, message, sender)
 		id_outfit3 = message.id_outfit3
 	end
 end
-
-
 
 function on_input(self, action_id, action)
 	if action_id then

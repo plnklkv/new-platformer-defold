@@ -94,6 +94,10 @@ images {
   image: "/resources/interactive_objects/lever_floor_3.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/gui/menu_gui.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 animations {
   id: "button"
   images {

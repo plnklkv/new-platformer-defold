@@ -1,13 +1,20 @@
+local sender_id = nil
+local money = 0
+
 local level1 = 1
 local level2 = 1
 local level3 = 1
-
-local money = 0
+local level4 = 1
+local level5 = 1
+local level6 = 1
 
 --стоимость улучшений 
 local money_scill1 = 20
 local money_scill2 = 30
 local money_scill3 = 40
+local money_scill4 = 20
+local money_scill5 = 30
+local money_scill6 = 40
 
 --разрешить нажать на кнопку
 local action_scill1 = false
@@ -18,7 +25,7 @@ function button_transparent2(button, value)
 	gui.set_color(button, vmath.vector4(value, value, value, value))
 end
 
-function update_transparent2()
+function update_transparent2(level1, level2, level3, money_scill1, money_scill2, money_scill3)
 	if level1 >= 3 or money_scill1 > money then
 		button_transparent(button_scill1, 0.5)
 		action_scill1 = false
@@ -58,13 +65,12 @@ function update_scill(scill, level)
 	if scill == 1 then
 		if level1 == 2 then
 			print("навык 1 - уровень 2")
-			msg.post("default:/player#player", "update_level_scill1", {damage = 1.7, cooldown = 4})
+			msg.post(sender_id, "update_level_scill1", {damage = 1.7, cooldown = 4})
 		elseif level1 == 3 then
 			print("навык 1 - уровень 3")
-			msg.post("default:/player#player", "update_level_scill1", {damage = 2, cooldown = 2})
+			msg.post(sender_id, "update_level_scill1", {damage = 2, cooldown = 2})
 
 		end
-
 		money = money - money_scill1
 	end
 
@@ -75,35 +81,39 @@ function update_scill(scill, level)
 		elseif level2 == 3 then
 			print("навык 2 - уровень 3")
 			msg.post("default:/weapon#weapon", "update_level_scill", {enemy_line = true, damage = 40, speed = 10, cooldown = 11})
-			
 		end
-		
 		money = money - money_scill2
 	end
 
 	if scill == 3 then
 		if level3 == 2 then
 			print("навык 3 - уровень 2")
-			msg.post("default:/player#player", "update_level_scill3", {meter = 200, splash = false, cooldown = 12})
+			msg.post(sender_id, "update_level_scill3", {meter = 200, splash = false, cooldown = 12})
 		elseif level3 == 3 then
 			print("навык 3 - уровень 3")
-			msg.post("default:/player#player", "update_level_scill3", {meter = 200, splash = true, cooldown = 10})
-			
+			msg.post(sender_id, "update_level_scill3", {meter = 200, splash = true, cooldown = 10})
 		end
-		
 		money = money - money_scill3
 	end
+
+	if scill == 4 then
+		if level4 == 2 then
+			print("навык 4 - уровень 2")
+			msg.post(sender_id, "update_level_scill4", {count_arrows = 4, cooldown = 5})
+		elseif level4 == 3 then
+			print("навык 4 - уровень 3")
+			msg.post(sender_id, "update_level_scill4", {count_arrows = 5, cooldown = 2})
+		end
+		money = money - money_scill4
+	end
+	
 	msg.post("default:/platform#game", "scill_update_player", {money = money})
 end
-
-function update(self, dt)
-	
-end
-
 
 function message_update2(level, value, text)
 	if level < value then
 		gui.set_text(gui.get_node(text), text .. "(" .. level .. " lvl) => " .. level + 1)
+		gui.set_enabled(gui.get_node("button_" ..text), true)
 	else
 		gui.set_text(gui.get_node(text), text .. "(MAX)")
 		gui.set_enabled(gui.get_node("button_" ..text), false)
@@ -111,19 +121,31 @@ function message_update2(level, value, text)
 end
 
 function on_message(self, message_id, message, sender)
+	if message_id == hash("open_scills") then
+		msg.post(".", "enable")
+		sender_id = message.sender_id
+		--print(sender_id)
+	end
+	
 	if message_id == hash("message_update_scills") then
 		money = message.money
 		gui.set_text(gui.get_node("money"), "money: " .. money)
 
-
-		message_update2(level1, 3, "skill1")
-		message_update2(level2, 3, "skill2")
-		message_update2(level3, 3, "skill3")
-		
-
-		gui.set_text(gui.get_node("text_skill1"), "update for " .. money_scill1)
-		gui.set_text(gui.get_node("text_skill2"), "update for " .. money_scill2)
-		gui.set_text(gui.get_node("text_skill3"), "update for " .. money_scill3)
+		if sender_id == msg.url("default:/player#player") then
+			message_update2(level1, 3, "skill1")
+			message_update2(level2, 3, "skill2")
+			message_update2(level3, 3, "skill3")
+			gui.set_text(gui.get_node("text_skill1"), "update for " .. money_scill1)
+			gui.set_text(gui.get_node("text_skill2"), "update for " .. money_scill2)
+			gui.set_text(gui.get_node("text_skill3"), "update for " .. money_scill3)
+		elseif sender_id == msg.url("default:/player2#player2") then
+			message_update2(level4, 3, "skill1")
+			message_update2(level5, 3, "skill2")
+			message_update2(level6, 3, "skill3")
+			gui.set_text(gui.get_node("text_skill1"), "update for " .. money_scill4)
+			gui.set_text(gui.get_node("text_skill2"), "update for " .. money_scill5)
+			gui.set_text(gui.get_node("text_skill3"), "update for " .. money_scill6)
+		end
 	end
 end
 
@@ -135,25 +157,44 @@ function on_input(self, action_id, action)
 	end
 
 	if action.released and action_scill1 and (gui.pick_node(button_scill1, action.x, action.y)) and action_id == hash("touch") then
-		level1 = level1 + 1 
-		update_scill(1, level1)
-		money_scill1 = money_scill1 + 10
+		if sender_id == msg.url("default:/player#player") then
+			level1 = level1 + 1 
+			update_scill(1, level1)
+			money_scill1 = money_scill1 + 10
+		elseif sender_id == msg.url("default:/player2#player2") then
+			level4 = level4 + 1 
+			update_scill(4, level4)
+			money_scill4 = money_scill4 + 10
+		end
 	end
 	
 	if action.released and action_scill2 and (gui.pick_node(button_scill2, action.x, action.y)) and action_id == hash("touch") then
-		level2 = level2 + 1
-		update_scill(2, level2)
-		money_scill2 = money_scill2 + 10
-
-		
+		if sender_id == msg.url("default:/player#player") then
+			level2 = level2 + 1
+			update_scill(2, level2)
+			money_scill2 = money_scill2 + 10
+		elseif sender_id == msg.url("default:/player2#player2") then
+			level5 = level5 + 1
+			update_scill(5, level5)
+			money_scill5 = money_scill5 + 10
+		end	
 	end
 
 	if action.released and (gui.pick_node(button_scill3, action.x, action.y)) and action_id == hash("touch") then
-		level3 = level3 + 1
-		update_scill(3, level3)
-		money_scill3 = money_scill3 + 10
+		if sender_id == msg.url("default:/player#player") then
+			level3 = level3 + 1
+			update_scill(3, level3)
+			money_scill3 = money_scill3 + 10
+		elseif sender_id == msg.url("default:/player2#player2") then
+			level6 = level6 + 1
+			update_scill(6, level6)
+			money_scill6 = money_scill6 + 10
+		end
 	end
 
-	update_transparent2()
-	
+	if sender_id == msg.url("default:/player#player") then
+		update_transparent2(level1, level2, level3, money_scill1, money_scill2, money_scill3)
+	elseif sender_id == msg.url("default:/player2#player2") then
+		update_transparent2(level4, level5, level6, money_scill4, money_scill5, money_scill6)
+	end
 end

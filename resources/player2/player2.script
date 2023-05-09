@@ -1,8 +1,6 @@
-go.property("damage_player", 30)
-go.property("shot_player", 60)
+
+go.property("shot_player", 30)
 local speed = 150
---local money = 1000
---local score = 0
 local shield = 0
 
 local platypus = require "platypus.platypus"
@@ -11,17 +9,30 @@ local max_health = 100
 local player_health = 100
 local player_mana = 50
 
+local bonfire_contact = false
+
 --для выстрела
 local right = true
 
 --для отскока
 local cooldown_rebound = true
 
+local enemy_CONTACT = false
+
+--для первого навыка
+local count_arrows = 3
+local cooldown4 = 10
+local scill4 = false
 
 local function play_animation(self, animation, func)
 	if self.current_animation ~= animation then
 		self.current_animation = animation
 		sprite.play_flipbook("#sprite", animation, func)
+	elseif self.current_animation == hash("attack") then
+		sprite.play_flipbook("#sprite", animation, func)
+		
+
+		
 	end
 end
 
@@ -70,6 +81,10 @@ function init(self)
 	self.current_animation = nil
 
 	self.cooldown = true
+
+	self.cooldown_activate_attack = true
+
+	self.now2 = 0
 	
 end
 
@@ -88,6 +103,16 @@ local function climb_down(self)
 	self.platypus.down(speed/2)
 end
 
+local function shot(self)
+	
+	
+		play_animation(self, hash("attack"), function()
+			local id = factory.create("shot#shot")
+			msg.post(id, "shot_in_enemy", {right = right})
+		end)
+	
+end
+
 --уменьшение здоровья игрока
 local function decrease_player_health(self, damage)
 	--сделать потом чтоб останавливаться
@@ -100,6 +125,8 @@ end
 function update(self, dt)
 	self.platypus.update(dt)
 
+	msg.post("bar2#lifebar", "set_mana", {mana = player_mana, max_mana = 100, player1 = false})
+	
 	if player_health <= 0 then
 		player_health = 0
 
@@ -156,10 +183,27 @@ function update(self, dt)
 			end)
 		end
 
+		--открытие меню
+		if self.actions[hash("interactive2")] and bonfire_contact then
+			--сообщ для открытия меню
+			msg.post("main:/menu#menu", "open_menu")
+		end
+
+		
 		msg.post("bar2#lifebar", "set_health", {health = player_health, max_health = max_health, player1 = false})
 	end
 
+
+
 	
+end
+
+--функция для первого активируемого навыка
+function cooldown_activate_attack(self)
+	self.cooldown_activate_attack = false
+	timer.delay(cooldown4, false, function()
+		self.cooldown_activate_attack = true
+	end)
 end
 
 function on_message(self, message_id, message, sender)
@@ -167,6 +211,15 @@ function on_message(self, message_id, message, sender)
 
 	if message_id == hash("trigger_response") then
 
+		--контакт с костром
+		if message.group == hash("bonfire") then
+			if message.enter then
+				bonfire_contact = true
+			else
+				bonfire_contact = false
+			end
+		end	
+		
 		--контакт с лестницей
 		if message.other_group == hash("ladder") then
 			if message.enter then
@@ -188,10 +241,70 @@ function on_message(self, message_id, message, sender)
 
 		end
 	end
+	
 	--атака от врага
 	if message_id == hash("simple_attack") and self.cooldown then
 		print("attackakka")
 		decrease_player_health(self, message.damage)
+	end
+
+	--обновление характеристик от меню
+	if message_id == hash("menu_update_player") then
+		print("menu update message 22")
+		max_health = message.max_health
+		self.shot_player = message.damage_player
+		--go.set("#", "damage_player", message.damage_player)
+		print(self.shot_player)
+		speed = message.speed
+		shield = message.shield
+		player_health = max_health
+		go.set("platform#game", "score", message.score)
+		msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.damage_player, speed = speed, shield = shield})
+
+	end
+
+
+	--обновление навыка 1
+	if message_id == hash("update_level_scill4") then
+		cooldown4 = message.cooldown
+		count_arrows = message.count_arrows
+	end
+	
+	if player_health > 0 then
+		--активируемый навык
+		if message_id == hash("scill4") and player_mana >= 20 and self.cooldown_activate_attack then
+			print("навык 4")
+			local count = 1
+			scill4 = true
+			cooldown_activate_attack(self)
+			count = 0
+
+			self.timer_shot = timer.delay(1, true, function()
+				shot(self)
+				count = count + 1
+				if count == count_arrows then
+					timer.cancel(self.timer_shot)
+					scill4 = false
+				end
+			end)
+						
+			--player_mana = player_mana - 20 
+		end
+		--второй активируемый навык: метание меча
+		if message_id == hash("scill5") and player_mana >= 20 and self.cooldown_scill2 then
+
+			
+			player_mana = player_mana - 20 
+
+		end
+		
+		--третий актив навык: рывок
+		if message_id == hash("scill6") and scill3 == false and player_mana >= 20 then
+
+			
+			player_mana = player_mana - 20 
+
+		end
 	end
 end
 
@@ -207,9 +320,6 @@ function on_input(self, action_id, action)
 	end
 
 	if action_id == hash("shot") and action.released then
-		play_animation(self, hash("attack"), function()
-			local id = factory.create("shot#shot")
-			msg.post(id, "shot_in_enemy", {right = right})
-		end)
+		shot(self)
 	end
 end
