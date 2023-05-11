@@ -3,11 +3,19 @@ local trigger = hash("trigger_response")
 
 local GROUP_enemy = hash("enemy")
 
+local scill5 = false
+local damage5 = 25
+local time5 = 2
+go.property("cooldown5", 20)
 
 function init(self)
 	self.pos_shot = go.get_position()
-	self.speed = 100
+	self.speed = 150
+	self.cooldown_activate_attack = true
+	
 end
+
+
 
 function update(self, dt)
 	self.pos_shot.x = self.pos_shot.x + self.speed * dt
@@ -24,7 +32,26 @@ function on_message(self, message_id, message, sender)
 
 	--контакт с врагом
 	if message_id == trigger and message.other_group == GROUP_enemy then
-		msg.post(message.other_id, "shot_attack")
+		--self.enemy_contact = true
+		if scill5 then
+			msg.post(message.other_id, "scill5_attack", {damage5 = damage5, time5 = time5})
+			scill5 = false
+		else
+			msg.post(message.other_id, "shot_attack")
+		end
 		go.delete()
+
+	end
+
+	--второй навык второго игрока
+	if message_id == hash("scill5") then
+		scill5 = true
+	end
+
+	if message_id == hash("update_level_scill5") then
+		damage5 = message.damage5
+		time5 = message.time5
+		self.cooldown5 = message.cooldown
+		print(damage5, time5)
 	end
 end

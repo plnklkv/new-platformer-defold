@@ -24,6 +24,11 @@ local count_arrows = 3
 local cooldown4 = 10
 local scill4 = false
 
+--для второго навыка
+local scill5 = false
+local cooldown5 = 8
+
+
 local function play_animation(self, animation, func)
 	if self.current_animation ~= animation then
 		self.current_animation = animation
@@ -103,14 +108,15 @@ local function climb_down(self)
 	self.platypus.down(speed/2)
 end
 
-local function shot(self)
-	
-	
-		play_animation(self, hash("attack"), function()
-			local id = factory.create("shot#shot")
-			msg.post(id, "shot_in_enemy", {right = right})
-		end)
-	
+local function shot(self)	
+	play_animation(self, hash("attack"), function()
+		local id = factory.create("shot#shot")
+		msg.post(id, "shot_in_enemy", {right = right})
+		if scill5 then
+			msg.post(id, "scill5")
+			
+		end
+	end)
 end
 
 --уменьшение здоровья игрока
@@ -199,9 +205,9 @@ function update(self, dt)
 end
 
 --функция для первого активируемого навыка
-function cooldown_activate_attack(self)
+function cooldown_activate_attack(self, cooldown)
 	self.cooldown_activate_attack = false
-	timer.delay(cooldown4, false, function()
+	timer.delay(cooldown, false, function()
 		self.cooldown_activate_attack = true
 	end)
 end
@@ -276,7 +282,7 @@ function on_message(self, message_id, message, sender)
 			print("навык 4")
 			local count = 1
 			scill4 = true
-			cooldown_activate_attack(self)
+			cooldown_activate_attack(self, cooldown4)
 			count = 0
 
 			self.timer_shot = timer.delay(1, true, function()
@@ -290,11 +296,13 @@ function on_message(self, message_id, message, sender)
 						
 			--player_mana = player_mana - 20 
 		end
-		--второй активируемый навык: метание меча
-		if message_id == hash("scill5") and player_mana >= 20 and self.cooldown_scill2 then
-
-			
-			player_mana = player_mana - 20 
+		--второй активируемый навык: замедление противников
+		if message_id == hash("scill5") and player_mana >= 20 and self.cooldown_activate_attack then
+			scill5 = true
+			shot(self)
+			print("навык 5")
+			cooldown_activate_attack(self,  go.get("shot#shot1", "cooldown5"))
+			--player_mana = player_mana - 20 
 
 		end
 		

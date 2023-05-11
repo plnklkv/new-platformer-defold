@@ -20,7 +20,7 @@ function init(self)
 
 	self.msg_shot_attack = hash("shot_attack")
 	self.msg_simple_attack = hash("simple_attack")	
-
+	
 	msg.post("main:/difficulty#difficulty", "enemy_sender")
 end
 
@@ -127,5 +127,13 @@ function on_message(self, message_id, message, sender)
 		self.speed = self.speed / message.speed
 
 		decrease_enemy_health(self, message.damage)
+	end
+
+	if message_id == hash("scill5_attack") then
+		self.speed = 0
+		decrease_enemy_health(self, message.damage5)
+		timer.delay(message.time5, false, function()
+			self.speed = 50
+		end)
 	end
 end
