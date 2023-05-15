@@ -1,6 +1,3 @@
-local id = nil
-
-local cooldown_bool = true
 go.property("damage", 20) --крч так делать по уровням значения и получать в плэйере
 local damage = 20
 --go.property("enemy_line", false)
@@ -11,7 +8,7 @@ local cooldown = 15
 
 function init(self)
 	self.pos_weapon = go.get_position()
-	msg.post("player#player", "weapon_id")
+	--msg.post("player#player", "weapon_id")
 	self.speed = 400
 	
 end
@@ -55,7 +52,6 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("trigger_response") and message.enter and message.other_group == hash("enemy") then
 		msg.post(message.other_id, "scill2_attack", {damage = damage, speed = self.speed})
 		
-		print("атака навыком 2")
 		if enemy_line == false then
 			go.delete()
 		end

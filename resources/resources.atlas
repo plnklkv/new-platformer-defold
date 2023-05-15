@@ -98,6 +98,10 @@ images {
   image: "/gui/menu_gui.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
+images {
+  image: "/gui/scill/scill6/bomb.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
 animations {
   id: "button"
   images {
@@ -121,6 +125,41 @@ animations {
   }
   playback: PLAYBACK_NONE
   fps: 8
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "effect_bomb"
+  images {
+    image: "/gui/scill/scill6/frame0000.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/gui/scill/scill6/frame0001.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/gui/scill/scill6/frame0002.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/gui/scill/scill6/frame0003.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/gui/scill/scill6/frame0004.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/gui/scill/scill6/frame0005.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  images {
+    image: "/gui/scill/scill6/frame0006.png"
+    sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 12
   flip_horizontal: 0
   flip_vertical: 0
 }

@@ -115,7 +115,18 @@ function update_scill(scill, level)
 			print("навык 5 - уровень 3")
 			msg.post("default:/shot#shot1", "update_level_scill5", {damage5 = 80, time5 = 4, cooldown = 10})
 		end
-		money = money - money_scill4
+		money = money - money_scill5
+	end
+
+	if scill == 6 then
+		if level6 == 2 then
+			print("навык 6 - уровень 2")
+			msg.post("default:/bomb#bomb", "update_level_scill6", {meter6 = 300, damage6 = 30, damage_second6 = 7, cooldown = 5})
+		elseif level6 == 3 then
+			print("навык 6 - уровень 3")
+			msg.post("default:/bomb#bomb", "update_level_scill6", {meter6 = 400, damage6 = 35, damage_second6 = 10, cooldown = 8})
+		end
+		money = money - money_scill6
 	end
 	
 	msg.post("default:/platform#game", "scill_update_player", {money = money})

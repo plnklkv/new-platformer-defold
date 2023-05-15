@@ -136,4 +136,26 @@ function on_message(self, message_id, message, sender)
 			self.speed = 50
 		end)
 	end
+
+	if message_id == hash("scill3_attack") then
+		decrease_enemy_health(self, message.damage6)
+		local i = 0
+		--[[for i = 0,5 do
+			print(i)
+			timer6 = timer.delay(1, false, function()
+				timer.cancel(timer6)
+				i = i+1
+			end)
+		end]]--
+
+		timer6 = timer.delay(1, true, function()
+			print(i)
+			i = i+1
+			decrease_enemy_health(self, message.damage_second6)
+			if i == 5 then
+				timer.cancel(timer6)
+			end
+		end)
+		
+	end
 end

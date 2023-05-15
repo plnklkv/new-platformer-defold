@@ -53,7 +53,6 @@ local function cooldown(self)
 		self.cooldown = true
 		go.cancel_animations("#sprite", "tint")
 		go.set("#sprite", "tint", vmath.vector4(1, 1, 1, 1))
-
 	end)
 end
 
@@ -260,7 +259,6 @@ function on_message(self, message_id, message, sender)
 		max_health = message.max_health
 		self.shot_player = message.damage_player
 		--go.set("#", "damage_player", message.damage_player)
-		print(self.shot_player)
 		speed = message.speed
 		shield = message.shield
 		player_health = max_health
@@ -296,6 +294,7 @@ function on_message(self, message_id, message, sender)
 						
 			--player_mana = player_mana - 20 
 		end
+		
 		--второй активируемый навык: замедление противников
 		if message_id == hash("scill5") and player_mana >= 20 and self.cooldown_activate_attack then
 			scill5 = true
@@ -306,12 +305,13 @@ function on_message(self, message_id, message, sender)
 
 		end
 		
-		--третий актив навык: рывок
-		if message_id == hash("scill6") and scill3 == false and player_mana >= 20 then
-
+		--третий актив навык: бомба
+		if message_id == hash("scill6") and player_mana >= 20 and self.cooldown_activate_attack then
+			local id = factory.create("bomb#factory_bomb")
+			msg.post(id, "create_bomb", {right = right})
+			cooldown_activate_attack(self, go.get("bomb#bomb", "cooldown6"))
+			--player_mana = player_mana - 20 
 			
-			player_mana = player_mana - 20 
-
 		end
 	end
 end

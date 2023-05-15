@@ -1,0 +1,39 @@
+local meter6 = 200
+local damage6 = 25
+local damage_second6 = 5
+go.property("cooldown6", 5)
+local pos = nil
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("create_bomb") then
+		if not message.right then
+			meter6 = -meter6
+			sprite.set_hflip("#bomb", true)
+		end
+		local pos = go.get_position()
+		
+		local values = { 0, 1, 0}
+		local vector = vmath.vector(values)
+		go.animate(go.get_id(), "position.y", go.PLAYBACK_ONCE_FORWARD, 100, vector, 1)
+		go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, pos.x + meter6, go.EASING_LINEAR, 1, 0, function()
+			go.set_scale(5)
+			sprite.play_flipbook("#sprite", hash("effect_bomb"), function()
+				go.delete()
+			end)
+		end)
+	end
+
+	--контакт с врагом
+	if message_id == hash("trigger_response") and message.enter and message.other_group == hash("enemy") then
+		msg.post(message.other_id, "scill3_attack", {damage6 = damage6, damage_second6 = damage_second6})
+	end
+
+	--обновление навыка
+	if message_id == hash("update_level_scill6") then
+		meter6 = message.meter6
+		damage6 = message.damage6
+		damage_second6 = message.damage_second6
+		self.cooldown6 = message.cooldown6
+		go.set("#", "cooldown6", message.cooldown)
+	end
+end
