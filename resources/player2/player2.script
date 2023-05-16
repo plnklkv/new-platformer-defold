@@ -192,6 +192,7 @@ function update(self, dt)
 		if self.actions[hash("interactive2")] and bonfire_contact then
 			--сообщ для открытия меню
 			msg.post("main:/menu#menu", "open_menu")
+			msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.shot_player, speed = speed, shield = shield})
 		end
 
 		
@@ -263,7 +264,7 @@ function on_message(self, message_id, message, sender)
 		shield = message.shield
 		player_health = max_health
 		go.set("platform#game", "score", message.score)
-		msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.damage_player, speed = speed, shield = shield})
+		msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.shot_player, speed = speed, shield = shield})
 
 	end
 

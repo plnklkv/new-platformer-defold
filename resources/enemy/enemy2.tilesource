@@ -1,0 +1,20 @@
+image: "/resources/enemy/Minotaur - Sprite Sheet (1).png"
+tile_width: 95
+tile_height: 95
+tile_margin: 0
+tile_spacing: 0
+collision: ""
+material_tag: "tile"
+collision_groups: "enemy"
+animations {
+  id: "run"
+  start_tile: 13
+  end_tile: 18
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 6
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+extrude_borders: 2
+inner_padding: 0
+sprite_trim_mode: SPRITE_TRIM_MODE_OFF

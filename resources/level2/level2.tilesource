@@ -478,7 +478,7 @@ convex_hulls {
 convex_hulls {
   index: 292
   count: 8
-  collision_group: ""
+  collision_group: "obstacle_for_enemy"
 }
 convex_hulls {
   index: 300
@@ -995,6 +995,7 @@ convex_hulls {
   count: 0
   collision_group: ""
 }
+collision_groups: "obstacle_for_enemy"
 collision_groups: "platform"
 collision_groups: "spikes"
 extrude_borders: 2

@@ -57,7 +57,8 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 
 	print("ЗАГРУЖЕНО")
-
+	msg.post("/scill#scill", "player_id")
+	
 	self.input_state = {}
 	self.platypus = platypus.create({
 		collisions = {
@@ -211,6 +212,7 @@ function update(self, dt)
 		if self.actions[input_interactive] and bonfire_contact then
 			--сообщ для открытия меню
 			msg.post("main:/menu#menu", "open_menu")
+			msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.damage_player, speed = speed, shield = shield})
 		end
 
 		--атака
@@ -364,13 +366,12 @@ function on_message(self, message_id, message, sender)
 		max_health = message.max_health
 		self.damage_player = message.damage_player
 		--go.set("#", "damage_player", message.damage_player)
-		print(self.damage_player)
 		speed = message.speed
 		shield = message.shield
 		player_health = max_health
-		go.set("platform#game", "score", message.score)
-		msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.damage_player, speed = speed, shield = shield})
+		go.set("platform#game", "score", message.score)		print("health^ ", max_health)
 		
+		msg.post("main:/menu#menu", "message_menu", {score = go.get("platform#game", "score"), money = go.get("platform#game", "money"), max_health = max_health, damage = self.damage_player, speed = speed, shield = shield})
 	end
 
 

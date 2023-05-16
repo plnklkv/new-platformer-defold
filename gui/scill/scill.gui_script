@@ -1,14 +1,20 @@
 local select_scill = 1
 local select_scill2 = 4
 
+local sender_url = nil
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	
 	--gui.set_color(self.scill1, vmath.vector4(1, 1, 1, 1))
+	
 end
 
 function on_message(self, message_id, message, sender)
-	
+	if message_id == hash("player_id") then
+		print(sender.socket)
+		sender_url = sender.socket
+	end
 end
 
 function on_input(self, action_id, action)
@@ -23,7 +29,7 @@ function on_input(self, action_id, action)
 	end
 
 	if action_id == hash("scill") and action.pressed then
-		msg.post("default:/player#player", "scill" .. select_scill)
+		msg.post(msg.url(sender_url, "/player","player"), "scill" .. select_scill)
 	end
 
 	--второй игрок
@@ -38,6 +44,6 @@ function on_input(self, action_id, action)
 	end
 
 	if action_id == hash("scill2") and action.pressed then
-		msg.post("default:/player2#player2", "scill" .. select_scill2)
+		msg.post(msg.url(sender_url, "/player2","player2"), "scill" .. select_scill2)
 	end
 end

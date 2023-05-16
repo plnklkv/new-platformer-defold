@@ -1,4 +1,4 @@
-local sender_id = nil
+local sender_id = msg.url()
 local money = 0
 
 local level1 = 1
@@ -77,10 +77,10 @@ function update_scill(scill, level)
 	if scill == 2 then
 		if level2 == 2 then
 			print("навык 2 - уровень 2")
-			msg.post("default:/weapon#weapon", "update_level_scill", {enemy_line = true, damage = 20, speed = 10, cooldown = 12})
+			msg.post(msg.url(sender_id.socket, "/weapon", "weapon"), "update_level_scill", {enemy_line = true, damage = 20, speed = 10, cooldown = 12})
 		elseif level2 == 3 then
 			print("навык 2 - уровень 3")
-			msg.post("default:/weapon#weapon", "update_level_scill", {enemy_line = true, damage = 40, speed = 10, cooldown = 11})
+			msg.post(msg.url(sender_id.socket, "/weapon", "weapon"), "update_level_scill", {enemy_line = true, damage = 40, speed = 10, cooldown = 11})
 		end
 		money = money - money_scill2
 	end
@@ -110,10 +110,10 @@ function update_scill(scill, level)
 	if scill == 5 then
 		if level5 == 2 then
 			print("навык 5 - уровень 2")
-			msg.post("default:/shot#shot1", "update_level_scill5", {damage5 = 50, time5 = 3, cooldown = 18})
+			msg.post(msg.url(sender_id.socket, "/shot", "shot1"), "update_level_scill5", {damage5 = 50, time5 = 3, cooldown = 18})
 		elseif level5 == 3 then
 			print("навык 5 - уровень 3")
-			msg.post("default:/shot#shot1", "update_level_scill5", {damage5 = 80, time5 = 4, cooldown = 10})
+			msg.post(msg.url(sender_id.socket, "/shot", "shot1"), "update_level_scill5", {damage5 = 80, time5 = 4, cooldown = 10})
 		end
 		money = money - money_scill5
 	end
@@ -121,15 +121,15 @@ function update_scill(scill, level)
 	if scill == 6 then
 		if level6 == 2 then
 			print("навык 6 - уровень 2")
-			msg.post("default:/bomb#bomb", "update_level_scill6", {meter6 = 300, damage6 = 30, damage_second6 = 7, cooldown = 5})
+			msg.post(msg.url(sender_id.socket, "/bomb", "bomb"), "update_level_scill6", {meter6 = 300, damage6 = 30, damage_second6 = 7, cooldown = 5})
 		elseif level6 == 3 then
 			print("навык 6 - уровень 3")
-			msg.post("default:/bomb#bomb", "update_level_scill6", {meter6 = 400, damage6 = 35, damage_second6 = 10, cooldown = 8})
+			msg.post(msg.url(sender_id.socket, "/bomb", "bomb"), "update_level_scill6", {meter6 = 400, damage6 = 35, damage_second6 = 10, cooldown = 8})
 		end
 		money = money - money_scill6
 	end
 	
-	msg.post("default:/platform#game", "scill_update_player", {money = money})
+	msg.post(msg.url(sender_id.socket, "/platform", "game"), "scill_update_player", {money = money})
 end
 
 function message_update2(level, value, text)
@@ -153,14 +153,14 @@ function on_message(self, message_id, message, sender)
 		money = message.money
 		gui.set_text(gui.get_node("money"), "money: " .. money)
 
-		if sender_id == msg.url("default:/player#player") then
+		if sender_id.fragment == hash("player") then
 			message_update2(level1, 3, "skill1")
 			message_update2(level2, 3, "skill2")
 			message_update2(level3, 3, "skill3")
 			gui.set_text(gui.get_node("text_skill1"), "update for " .. money_scill1)
 			gui.set_text(gui.get_node("text_skill2"), "update for " .. money_scill2)
 			gui.set_text(gui.get_node("text_skill3"), "update for " .. money_scill3)
-		elseif sender_id == msg.url("default:/player2#player2") then
+		elseif sender_id.fragment == hash("player2") then
 			message_update2(level4, 3, "skill1")
 			message_update2(level5, 3, "skill2")
 			message_update2(level6, 3, "skill3")
@@ -179,11 +179,11 @@ function on_input(self, action_id, action)
 	end
 
 	if action.released and action_scill1 and (gui.pick_node(button_scill1, action.x, action.y)) and action_id == hash("touch") then
-		if sender_id == msg.url("default:/player#player") then
+		if sender_id.fragment == hash("player") then
 			level1 = level1 + 1 
 			update_scill(1, level1)
 			money_scill1 = money_scill1 + 10
-		elseif sender_id == msg.url("default:/player2#player2") then
+		elseif sender_id.fragment == hash("player2") then
 			level4 = level4 + 1 
 			update_scill(4, level4)
 			money_scill4 = money_scill4 + 10
@@ -191,11 +191,11 @@ function on_input(self, action_id, action)
 	end
 	
 	if action.released and action_scill2 and (gui.pick_node(button_scill2, action.x, action.y)) and action_id == hash("touch") then
-		if sender_id == msg.url("default:/player#player") then
+		if sender_id.fragment == hash("player") then
 			level2 = level2 + 1
 			update_scill(2, level2)
 			money_scill2 = money_scill2 + 10
-		elseif sender_id == msg.url("default:/player2#player2") then
+		elseif sender_id.fragment == hash("player2") then
 			level5 = level5 + 1
 			update_scill(5, level5)
 			money_scill5 = money_scill5 + 10
@@ -203,20 +203,20 @@ function on_input(self, action_id, action)
 	end
 
 	if action.released and (gui.pick_node(button_scill3, action.x, action.y)) and action_id == hash("touch") then
-		if sender_id == msg.url("default:/player#player") then
+		if sender_id.fragment == hash("player") then
 			level3 = level3 + 1
 			update_scill(3, level3)
 			money_scill3 = money_scill3 + 10
-		elseif sender_id == msg.url("default:/player2#player2") then
+		elseif sender_id.fragment == hash("player2") then
 			level6 = level6 + 1
 			update_scill(6, level6)
 			money_scill6 = money_scill6 + 10
 		end
 	end
 
-	if sender_id == msg.url("default:/player#player") then
+	if sender_id.fragment == hash("player") then
 		update_transparent2(level1, level2, level3, money_scill1, money_scill2, money_scill3)
-	elseif sender_id == msg.url("default:/player2#player2") then
+	elseif sender_id.fragment == hash("player2") then
 		update_transparent2(level4, level5, level6, money_scill4, money_scill5, money_scill6)
 	end
 end
